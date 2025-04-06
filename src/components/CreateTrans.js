@@ -122,14 +122,14 @@ export default function CreateTransfer() {
           {baptismalCert && <p className="text-sm text-gray-500">Uploaded: {baptismalCert.name}</p>}
 
           {/* Approved Reading */}
-          <label className="block text-gray-700 font-medium mt-3">Approved Reading</label>
+          {/* <label className="block text-gray-700 font-medium mt-3">Approved Reading</label>
           <select className="w-full p-2 mt-1 border rounded bg-white" required>
             <option value="">Select Reading</option>
             <option value="1st">1st Reading</option>
             <option value="2nd">2nd Reading</option>
             <option value="3rd">3rd Reading</option>
             <option value="Approved">Approved</option>
-          </select>
+          </select> */}
 
           {/* Submit Button */}
           <button

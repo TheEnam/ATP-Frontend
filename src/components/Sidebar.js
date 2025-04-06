@@ -4,7 +4,8 @@ import { RiHomeSmile2Line, RiDeleteBin6Line } from "react-icons/ri";
 import { MdOutlineSettingsSuggest, MdDarkMode } from "react-icons/md";
 import { MdTransferWithinAStation } from "react-icons/md";
 import { GiPayMoney } from "react-icons/gi";
-import { IoIosAddCircleOutline, IoIosArrowDown } from "react-icons/io";
+import { IoIosArrowDown } from "react-icons/io";
+import { AiOutlineFileText } from "react-icons/ai";
 import { GrNotes } from "react-icons/gr";
 
 export default function Sidebar() {
@@ -12,10 +13,10 @@ export default function Sidebar() {
       <div className="bg-gray-100 p-4 h-screen w-1/6 flex flex-col justify-between">
         {/* Top Section */}
         <div>
-          <div className="flex flex-row items-center space-x-3 mb-7">
+          <Link to="/" className="flex flex-row items-center space-x-3 mb-7">
             <GrNotes />
-            <p className="text-xl">LESCetariat</p>
-          </div>
+            <p className="text-xl font-semibold">LESCetariat</p>
+          </Link>
   
           <div className="text-gray-500 flex flex-col space-y-4">
             <Link to="/" className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300">
@@ -24,18 +25,18 @@ export default function Sidebar() {
             </Link>
   
             <Link to="/add-announcement" className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300">
-              <IoIosAddCircleOutline />
-              <p>Add Announcement</p>
+              <AiOutlineFileText />
+              <p>Announcements</p>
             </Link>
   
             <Link to="/add-thanksgiving" className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300">
               <GiPayMoney />
-              <p>Add Thanksgiving</p>
+              <p>Thanksgiving</p>
             </Link>
 
-            <Link to="/create-transfer" className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300">
+            <Link to="/all-transfers" className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300">
               <MdTransferWithinAStation />
-              <p>Create Transfer</p>
+              <p>Transfers</p>
             </Link>
   
   

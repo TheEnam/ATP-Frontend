@@ -19,7 +19,7 @@ export default function Sidebar() {
           </Link>
   
           <div className="text-gray-500 flex flex-col space-y-4">
-            <Link to="/" className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300">
+            <Link to="/dashboard" className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300">
               <RiHomeSmile2Line />
               <p>Dashboard</p>
             </Link>

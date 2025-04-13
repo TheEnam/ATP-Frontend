@@ -63,7 +63,7 @@ export default function AddAnn() {
         </form>
 
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/dashboard")}
           className="block text-center text-black mt-3"
         >
           ⬅ Back to Dashboard

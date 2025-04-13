@@ -82,7 +82,7 @@ export default function AddThanksgiving() {
         </form>
 
         {/* Back Link */}
-        <Link to="/" className="block text-center text-black mt-3">
+        <Link to="/dashboard" className="block text-center text-black mt-3">
           ⬅ Back to Dashboard
         </Link>
       </div>

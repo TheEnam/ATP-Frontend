@@ -130,7 +130,7 @@ export default function CreateTransfer() {
           </button>
         </form>
 
-        <button onClick={() => navigate("/")} className="block text-center text-black mt-3">
+        <button onClick={() => navigate("/dashboard")} className="block text-center text-black mt-3">
           ⬅ Back to Dashboard
         </button>
       </div>

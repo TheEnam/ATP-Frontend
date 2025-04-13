@@ -1,20 +1,22 @@
-# fly.toml app configuration file generated for atp-frontend on 2025-04-06T17:23:34Z
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
-
 app = 'atp-frontend'
 primary_region = 'ams'
 
 [build]
 
-[http_service]
+[env]
+PORT = "3000"  # Let Fly.io know what port your app listens on
+
+[[services]]
   internal_port = 3000
-  force_https = true
-  auto_stop_machines = 'stop'
-  auto_start_machines = true
-  min_machines_running = 0
-  processes = ['app']
+  protocol = "tcp"
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
 
 [[vm]]
   memory = '1gb'

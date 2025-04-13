@@ -2,6 +2,7 @@
   "name": "project-a",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://atp-frontend.fly.dev",
   "dependencies": {
     "@tailwindcss/cli": "^4.0.15",
     "@testing-library/dom": "^10.4.0",

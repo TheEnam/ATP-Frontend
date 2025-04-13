@@ -4,6 +4,7 @@ import Dashboard from "./components/Dashboard";
 import AddAnn from "./components/AddAnn";
 import AddTh from "./components/AddTh";
 import Transfers from "./components/Transfers"
+import TransferDetails from "./components/TransferDetails";
 import CreateTrans from "./components/CreateTrans";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/add-announcement" element={<AddAnn />} />
             <Route path="/add-thanksgiving" element={<AddTh />} />
+            <Route path="/transfer/:id" element={<TransferDetails />} />
             <Route path="/create-transfer" element={<CreateTrans />} />
             <Route path="/all-transfers" element={<Transfers />} />
           </Routes>

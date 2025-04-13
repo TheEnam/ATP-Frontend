@@ -121,18 +121,8 @@ export default function CreateTransfer() {
           <input type="file" className="w-full p-2 mt-1 border rounded bg-white" onChange={handleFileChange} required />
           {baptismalCert && <p className="text-sm text-gray-500">Uploaded: {baptismalCert.name}</p>}
 
-          {/* Approved Reading */}
-          {/* <label className="block text-gray-700 font-medium mt-3">Approved Reading</label>
-          <select className="w-full p-2 mt-1 border rounded bg-white" required>
-            <option value="">Select Reading</option>
-            <option value="1st">1st Reading</option>
-            <option value="2nd">2nd Reading</option>
-            <option value="3rd">3rd Reading</option>
-            <option value="Approved">Approved</option>
-          </select> */}
-
           {/* Submit Button */}
-          <button
+          <button onClick={() => navigate("/all-transfers")}
             type="submit"
             className="w-full mt-4 p-2 border border-black rounded bg-transparent text-black font-bold hover:bg-black hover:text-white transition"
           >

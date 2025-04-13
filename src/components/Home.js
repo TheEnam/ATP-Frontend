@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="text-center bg-white p-8 rounded shadow-md max-w-md w-full">
-        <h1 className="text-3xl font-bold mb-4">Welcome to ATP</h1>
+        <h1 className="text-3xl font-bold mb-4">Welcome to LESCetariat</h1>
         <p className="text-gray-600 mb-6">Please log in or sign up to continue.</p>
         
         <div className="flex justify-center gap-4">

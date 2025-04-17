@@ -7,8 +7,20 @@ import { GiPayMoney } from "react-icons/gi";
 import { IoIosArrowDown } from "react-icons/io";
 import { AiOutlineFileText } from "react-icons/ai";
 import { GrNotes } from "react-icons/gr";
+import { MdLogout } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 export default function Sidebar() {
+    const navigate = useNavigate();
+    
+    const handleLogout = () => {
+      const confirmLogout = window.confirm("Are you sure you want to logout?");
+      if (confirmLogout) {
+        // You can also clear any authentication data or tokens here
+        navigate("/");  // Redirect to Home page after logout confirmation
+      }
+    };
+
     return (
       <div className="bg-gray-100 p-4 h-screen w-1/6 flex flex-col justify-between">
         {/* Top Section */}
@@ -59,12 +71,19 @@ export default function Sidebar() {
               <p>Transfers</p>
             </div>
           <div className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300 cursor-pointer">
+            <MdDarkMode />
+            <p>Dark Mode</p>
+          </div>
+          <div className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300 cursor-pointer">
             <MdOutlineSettingsSuggest />
             <p>Settings</p>
           </div>
-          <div className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300 cursor-pointer">
-            <MdDarkMode />
-            <p>Dark Mode</p>
+          <div
+            onClick={handleLogout}
+            className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300 cursor-pointer"
+          >
+            <MdLogout />
+            <p>Logout</p>
           </div>
         </div>
       </div>

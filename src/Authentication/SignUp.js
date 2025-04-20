@@ -39,6 +39,9 @@ export default function SignUp() {
         state: { email: form.email },
       });
     } catch (err) {
+      if (err.response?.status === 400) {
+        setError("Email already exists.");
+      }
       console.error("Signup error:", err.response?.data || err.message);
     }
   };

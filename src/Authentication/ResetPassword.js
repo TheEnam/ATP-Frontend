@@ -21,17 +21,18 @@ const ResetPassword = () => {
         setLoading(true);
         setMessage("");
 
+        if (password !== confirmPassword) {
+            setMessage("Passwords do not match.");
+            setLoading(false);
+            return;
+        }
+
         if (password.length < 6 || confirmPassword.length < 6) {
             setMessage("Password must be at least 6 characters long.");
             setLoading(false);
             return;
         }
 
-        if (password !== confirmPassword) {
-        setMessage("Passwords do not match.");
-        setLoading(false);
-        return;
-        }
 
         try {
             const response = await resetPassword({

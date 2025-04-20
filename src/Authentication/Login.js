@@ -23,6 +23,7 @@ export default function Login(){
     console.log("Attempting login with:", form);
     try {
       const response = await login(form);
+      alert("Login successful!");
       console.log("Login success:", response);
       if (form.remember) {
         localStorage.setItem("token", response.token);

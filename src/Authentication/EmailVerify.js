@@ -16,7 +16,7 @@ const EmailVerify = () => {
     if (urlToken) {
       handleVerify(urlToken);
     } else {
-      setMessage("Invalid or missing token. Please enter your token manually.");
+      setMessage("Please enter the code you received.");
       setManualEntry(true);
     }
   }, [location]);

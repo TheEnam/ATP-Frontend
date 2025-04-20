@@ -56,23 +56,22 @@ export default function Login(){
           required
         />
 
-        <div>
+        <div className="relative mb-3">
           <input
             name="password"
             value={form.password}
             onChange={handleChange}
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="Password"
-            className="w-full p-2 border rounded mb-3"
+            className="w-full p-2 border rounded pr-10"
             required
           />
-          <button
-            type="button"
+          <span
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-4 top-16 text-gray-500"
+            className="absolute right-3 top-2 cursor-pointer"
           >
-            {showPassword ? <GoEye /> : <GoEyeClosed />}
-          </button>     
+            {showPassword ? <GoEyeClosed size={18} /> : <GoEye size={18} />}
+          </span>
         </div>
 
         {error && <p className="text-red-600 text-sm text-center mb-3">{error}</p>}

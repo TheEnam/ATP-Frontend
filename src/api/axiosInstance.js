@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "atp-apis.onrender.com",
+  baseURL: "https://atp-apis.onrender.com",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",

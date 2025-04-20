@@ -1,6 +1,6 @@
 import axios from "../axiosInstance";
 
-export const forgotPassword = async (data) => {
-  const response = await axios.post("/auth/password/forgot", data);
+export const forgotPassword = async (email) => {
+  const response = await axios.post("/auth/password/forgot", { email });
   return response.data;
 };

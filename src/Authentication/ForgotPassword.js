@@ -2,20 +2,23 @@ import React, { useState } from "react";
 import { forgotPassword } from "../api/auth/forgotPassword"; // API call to send reset link
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+    const [email, setEmail] = useState("");
+    const [message, setMessage] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setMessage("");
 
     try {
-      const response = await forgotPassword({ email });
-      setMessage("Password reset link sent to your email. Please check your inbox.");
-    } catch (error) {
-      setMessage("Failed to send password reset link. Please try again later.");
+        const response = await forgotPassword(email);
+        console.log("Response from forgot password API:", response);
+        setMessage("Password reset link sent. Please check your inbox.");
+    } catch (err) {
+        setError(error.response?.data?.message || "Something went wrong");
+        console.err("Error sending password reset link:", err);
     } finally {
       setLoading(false);
     }
@@ -37,9 +40,11 @@ const ForgotPassword = () => {
           className="w-full p-2 border rounded mb-3"
           required
         />
+
         {message && (
           <p className="text-center text-sm mb-3 text-gray-500">{message}</p>
         )}
+
         <button
           type="submit"
           disabled={loading}

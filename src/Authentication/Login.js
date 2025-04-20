@@ -30,7 +30,7 @@ export default function Login(){
         sessionStorage.setItem("token", response.token);
       }
 
-      navigate("/dashboard"); // or your post-login route
+      navigate("/dashboard");
     } catch (err) {
       console.error("Login failed response:", err?.response?.data || err);
       setError(err?.response?.data?.message || "Login failed. Please try again.");

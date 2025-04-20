@@ -1,7 +1,7 @@
 import axios from "../axiosInstance";
 
 export const verifyEmail = async (token) => {
-  const response = await axios.get(`/auth/verify-email?token=${token}`);
+  const response = await axios.post("/auth/email/verify");
   return response.data;
 };
 export const resendVerificationEmail = async (email) => {

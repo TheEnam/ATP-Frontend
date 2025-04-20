@@ -1,34 +1,40 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { login } from "../api/auth"; // or ../api/auth/login
+import { login } from "../api/auth/login";
 import { GoEye, GoEyeClosed } from "react-icons/go";
 
-
-export default function Login() {
-  const [form, setForm] = useState({ email: "", password: "" });
+export default function Login(){
+  const [form, setForm] = useState({ email: "", password: "", remember: false });
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
     console.log("Attempting login with:", form);
     try {
-      const result = await login(form);
-      console.log("Login success:", result);
-      // Save token and redirect
-      localStorage.setItem("token", result.token);
-      navigate("/dashboard");
+      const response = await login(form);
+      console.log("Login success:", response);
+      if (form.remember) {
+        localStorage.setItem("token", response.token);
+      } else {
+        sessionStorage.setItem("token", response.token);
+      }
+
+      navigate("/dashboard"); // or your post-login route
     } catch (err) {
       console.error("Login failed response:", err?.response?.data || err);
-      setError("Login failed. Check your credentials.");
-      console.error(err);
+      setError(err?.response?.data?.message || "Login failed. Please try again.");
     }
-  };
-  
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   return (
@@ -37,18 +43,18 @@ export default function Login() {
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded shadow-md w-full max-w-md"
       >
-        <h2 className="text-2xl font-bold mb-4 text-center">Log In</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+
 
         <input
+          type="email"
           name="email"
           value={form.email}
           onChange={handleChange}
-          type="email"
           placeholder="Email"
           className="w-full p-2 border rounded mb-3"
           required
         />
-
 
         <div>
           <input
@@ -69,13 +75,32 @@ export default function Login() {
           </button>     
         </div>
 
-        {error && <p className="text-red-500  place-self-center text-sm mb-3">{error}</p>}
+        {error && <p className="text-red-600 text-sm text-center mb-3">{error}</p>}
+
+        <div className="flex items-center justify-between text-sm mb-4">
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              name="remember"
+              checked={form.remember}
+              onChange={handleChange}
+              className="accent-black"
+            />
+            Remember me
+          </label>
+          <a
+            href="/forgot-password"
+            className="text-blue-600 hover:underline"
+          >
+            Forgot password?
+          </a>
+        </div>
 
         <button
           type="submit"
           className="w-full bg-black text-white p-2 rounded hover:bg-gray-800"
         >
-          Log In
+          Login
         </button>
 
         <p className="text-center mt-4 text-sm text-gray-600">
@@ -87,4 +112,4 @@ export default function Login() {
       </form>
     </div>
   );
-}
+};

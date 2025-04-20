@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "https://atp-frontend.fly.dev",
+  "proxy": "https://atp-apis.onrender.com",
   "dependencies": {
     "@tailwindcss/cli": "^4.0.15",
     "@testing-library/dom": "^10.4.0",

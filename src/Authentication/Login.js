@@ -1,19 +1,34 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { login } from "../api/auth"; // or ../api/auth/login
+import { GoEye, GoEyeClosed } from "react-icons/go";
+
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login data:", form);
-    // Akua TODO: send to backend (POST /login)
-    navigate("/dashboard"); // I have to move this inside the async logic later when backend responds
+    console.log("Attempting login with:", form);
+    try {
+      const result = await login(form);
+      console.log("Login success:", result);
+      // Save token and redirect
+      localStorage.setItem("token", result.token);
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Login failed response:", err?.response?.data || err);
+      setError("Login failed. Check your credentials.");
+      console.error(err);
+    }
+  };
+  
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   return (
@@ -34,17 +49,29 @@ export default function Login() {
           required
         />
 
-        <input
-          name="password"
-          value={form.password}
-          onChange={handleChange}
-          type="password"
-          placeholder="Password"
-          className="w-full p-2 border rounded mb-3"
-          required
-        />
 
-        <button onClick={() => navigate("/dashboard")}
+        <div>
+          <input
+            name="password"
+            value={form.password}
+            onChange={handleChange}
+            type="password"
+            placeholder="Password"
+            className="w-full p-2 border rounded mb-3"
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-4 top-16 text-gray-500"
+          >
+            {showPassword ? <GoEye /> : <GoEyeClosed />}
+          </button>     
+        </div>
+
+        {error && <p className="text-red-500  place-self-center text-sm mb-3">{error}</p>}
+
+        <button
           type="submit"
           className="w-full bg-black text-white p-2 rounded hover:bg-gray-800"
         >

@@ -9,6 +9,7 @@ import TransferDetails from "./components/TransferDetails";
 import CreateTrans from "./components/CreateTrans";
 import Login from "./Authentication/Login";
 import SignUp from "./Authentication/SignUp";
+import VerifyEmail from "./Authentication/VerifyEmail";
 
 function AppLayout({ children }) {
   return (
@@ -27,6 +28,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/verify-email" element={<VerifyEmail email=" " />} />
+        <Route path="/verify-email/:email" element={<VerifyEmail />} />
 
         {/* Routes WITH sidebar */}
         <Route

@@ -12,6 +12,7 @@ import SignUp from "./Authentication/SignUp";
 import VerifyEmail from "./Authentication/VerifyEmail";
 import EmailVerify from "./Authentication/EmailVerify";
 import ForgotPassword from "./Authentication/ForgotPassword";
+import ResetPassword from "./Authentication/ResetPassword";
 
 function AppLayout({ children }) {
   return (
@@ -34,7 +35,7 @@ function App() {
         <Route path="/verify-email/:email" element={<VerifyEmail />} />
         <Route path="/email/verify" element={<EmailVerify />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:token" element={<ForgotPassword />} />
+        <Route path="/password/reset/" element={<ResetPassword />} />
 
 
         {/* Routes WITH sidebar */}

@@ -10,7 +10,7 @@ import CreateTrans from "./components/CreateTrans";
 import Login from "./Authentication/Login";
 import SignUp from "./Authentication/SignUp";
 import VerifyEmail from "./Authentication/VerifyEmail";
-import EmailVerify from "./Authentication/EmailVerificationCallback";
+import EmailVerify from "./Authentication/EmailVerify";
 
 function AppLayout({ children }) {
   return (
@@ -32,7 +32,7 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmail email=" " />} />
         <Route path="/verify-email/:email" element={<VerifyEmail />} />
         <Route path="/email/verify" element={<EmailVerify />} />
-    
+
 
         {/* Routes WITH sidebar */}
         <Route

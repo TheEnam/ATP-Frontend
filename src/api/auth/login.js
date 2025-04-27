@@ -3,6 +3,7 @@ import axios from "../axiosInstance";
 export const login = async (data) => {
   try {
     const response = await axios.post("/auth/login", {
+      fullname: data.name,
       email: data.email,
       password: data.password
     });

@@ -35,7 +35,7 @@ const ResetPassword = () => {
 
 
         try {
-            const response = await resetPassword({
+            const response = await resetPassword({  
                 password,
                 verificationCode: token,
             });

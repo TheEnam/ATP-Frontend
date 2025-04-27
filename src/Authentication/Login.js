@@ -7,6 +7,7 @@ export default function Login(){
   const [form, setForm] = useState({ email: "", password: "", remember: false });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -19,11 +20,13 @@ export default function Login(){
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setError("");
     console.log("Attempting login with:", form);
     try {
       const response = await login(form);
       alert("Login successful!");
+      localStorage.removeItem("attemptedEmail");
       console.log("Login success:", response);
       if (form.remember) {
         localStorage.setItem("token", response.token);
@@ -35,6 +38,10 @@ export default function Login(){
     } catch (err) {
       console.error("Login failed response:", err?.response?.data || err);
       setError(err?.response?.data?.message || "Login failed. Please try again.");
+      localStorage.setItem("attemptedEmail", form.email);
+    }
+    finally {
+      setLoading(false);
     }
   };
 

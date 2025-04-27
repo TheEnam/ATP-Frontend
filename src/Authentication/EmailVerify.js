@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { verifyEmail } from "../api/auth/verifyEmail";
 
 const EmailVerify = () => {
-  const [token, setToken] = useState("");
+  const [digits, setDigits] = useState(["", "", "", ""]);
   const [message, setMessage] = useState("Verifying...");
   const [manualEntry, setManualEntry] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const inputRefs = useRef([]);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -35,10 +36,31 @@ const EmailVerify = () => {
     }
   };
 
+  const handleChange = (index, value) => {
+    if (!/^\d*$/.test(value)) return; 
+
+    const newDigits = [...digits];
+    newDigits[index] = value;
+    setDigits(newDigits);
+
+    if (value && index < 3) {
+      inputRefs.current[index + 1].focus();
+    }
+  };
+
+  const handleKeyDown = (index, e) => {
+    if (e.key === "Backspace" && !digits[index] && index > 0) {
+      inputRefs.current[index - 1].focus();
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (token.trim()) {
-      handleVerify(token.trim());
+    const code = digits.join("");
+    if (code.length === 4) {
+      handleVerify(code);
+    } else {
+      setMessage("Please complete the 4-digit code.");
     }
   };
 
@@ -50,14 +72,21 @@ const EmailVerify = () => {
 
         {manualEntry && (
           <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              placeholder="Enter your token"
-              value={token}
-              onChange={(e) => setToken(e.target.value)}
-              className="w-full p-2 border rounded mb-3"
-              required
-            />
+            <div className="flex justify-center gap-3 mb-4">
+              {digits.map((digit, index) => (
+                <input
+                  key={index}
+                  type="text"
+                  maxLength={1}
+                  value={digit}
+                  onChange={(e) => handleChange(index, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(index, e)}
+                  ref={(el) => (inputRefs.current[index] = el)}
+                  className="w-12 h-12 text-center border rounded text-lg"
+                  required
+                />
+              ))}
+            </div>
             <button
               type="submit"
               className="w-full bg-black text-white p-2 rounded hover:bg-gray-800"

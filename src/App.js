@@ -1,20 +1,23 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Sidebar from "./components/Sidebar";
-import Home from "./components/Home";
-import Dashboard from "./components/Dashboard";
-import AddAnn from "./components/AddAnn";
-import AddTh from "./components/AddTh";
-import Thanksgivings from "./components/Thanksgivings";
-import Announcements from "./components/Announcements";
-import Transfers from "./components/Transfers";
-import TransferDetails from "./components/TransferDetails";
-import CreateTrans from "./components/CreateTrans";
-import Login from "./Authentication/Login";
-import SignUp from "./Authentication/SignUp";
-import VerifyEmail from "./Authentication/VerifyEmail";
-import EmailVerify from "./Authentication/EmailVerify";
-import ForgotPassword from "./Authentication/ForgotPassword";
-import ResetPassword from "./Authentication/ResetPassword";
+import {
+  AddAnn,
+  Announcements,
+  Sidebar,
+  Dashboard,
+  Home,
+  Thanksgivings,
+  AddTh,
+  Transfers,
+  TransferDetails,
+  CreateTrans,
+  Login,
+  SignUp,
+  EmailVerify,
+  ForgotPassword,
+  ResetPassword,
+  VerifyEmail
+} from "./components";
+
 
 function AppLayout({ children }) {
   return (
@@ -54,6 +57,14 @@ function App() {
           element={
             <AppLayout>
               <AddAnn />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/announcement"
+          element={
+            <AppLayout>
+              <Announcements/>
             </AppLayout>
           }
         />

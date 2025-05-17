@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { addAnn } from "../api/announcements/addAnn";
+import { addAnn } from "../../api/announcements/addAnn";
 
 export default function AddAnn() {
   const navigate = useNavigate();
@@ -14,10 +14,10 @@ export default function AddAnn() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
+     setFormData((prev) => ({
+    ...prev,
+    [name]: type === "checkbox" ? checked : value
+  }));
   };
 
   const handleSubmit = async (e) => {
@@ -25,21 +25,17 @@ export default function AddAnn() {
     try {
       console.log("Sending data:", formData);
       await addAnn(formData);
-
       alert("Announcement added successfully!");
-      navigate("/announcements"); // update route as needed
+      navigate("/announcements");
     }catch (error) {
       if (error.response) {
-        console.error("Error response from server:", error.response);
-        alert(`Error: ${error.response.data?.message || "Failed to submit."}`);
-      } else if (error.request) {
-        console.error("No response received:", error.request);
-        alert("No response from server. Check your internet connection.");
+        console.error("Server error:", error.response);
+        alert(`Error: ${error.response.data?.message || "Bad Request"}`);
       } else {
-        console.error("Error setting up request:", error.message);
-        alert("An unexpected error occurred.");
+        console.error("Unexpected error:", error);
+        alert("An unexpected error occurred. Check console for details.");
       }
-    }
+    } 
   };
 
   return (
@@ -55,46 +51,56 @@ export default function AddAnn() {
             name="title"
             value={formData.title}
             onChange={handleChange}
-            className="w-full p-2 mt-1 border rounded bg-white text-gray-700"
+            className="w-full p-2 mt-1 border rounded"
             required
           />
 
           <label className="block text-gray-700 font-medium mt-3">Description</label>
           <textarea
             name="description"
-            rows="4"
             value={formData.description}
             onChange={handleChange}
-            className="w-full p-2 mt-1 border rounded bg-white text-gray-700"
+            rows="4"
+            className="w-full p-2 mt-1 border rounded"
             required
           ></textarea>
 
           <label className="block text-gray-700 font-medium mt-3">
-            Announcement Type
+            Type of Announcement (Level)
           </label>
           <select
             name="typeOfAnnouncement"
             value={formData.typeOfAnnouncement}
             onChange={handleChange}
-            className="w-full p-2 mt-1 border rounded bg-white text-gray-700"
+            className="w-full p-2 mt-1 border rounded"
+            required
           >
-            <option value="" disabled>Level</option>
-            <option value="conference">Conference</option>
-            <option value="district">District</option>
-            <option value="local">Local</option>
+            <option value="">Select</option>
+            <option value="Local">Local</option>
+            <option value="District">District</option>
+            <option value="Zone">Zone</option>
           </select>
 
-          <label className="block text-gray-700 font-medium mt-3">
-            Date of Announcement
-          </label>
+          <label className="block text-gray-700 font-medium mt-3">Date</label>
           <input
-            type="date"
+            type="datetime-local"
             name="dateOfAnnouncement"
             value={formData.dateOfAnnouncement}
             onChange={handleChange}
-            className="w-full p-2 mt-1 border rounded bg-white text-gray-700"
+            className="w-full p-2 mt-1 border rounded"
             required
           />
+
+          <label className="inline-flex items-center mt-3">
+            <input
+              type="checkbox"
+              name="is_recurring"
+              checked={formData.is_recurring}
+              onChange={handleChange}
+              className="mr-2"
+            />
+            Recurring Announcement
+          </label>
 
           <button
             type="submit"

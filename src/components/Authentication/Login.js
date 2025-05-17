@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { login } from "../api/auth/login";
+import { login } from "../../api/auth/login";
 import { GoEye, GoEyeClosed } from "react-icons/go";
 
 export default function Login(){

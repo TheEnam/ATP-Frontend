@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { addThanks } from "../api/thanksgiving/addThanks";
+import { addThanks } from "../../api/thanksgiving/addThanks";
 
 export default function AddThanksgiving() {
   const [formData, setFormData] = useState({

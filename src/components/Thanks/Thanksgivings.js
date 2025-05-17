@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { getThanksgivings } from "../api/thanksgiving/seeThanks";
-import { deleteThanksgiving } from "../api/thanksgiving/deleteThanks";
-import { updateThanksgiving } from "../api/thanksgiving/updateThanks";
-import { getThanksById} from "../api/thanksgiving/getThanksById";
+import { getThanksgivings } from "../../api/thanksgiving/seeThanks";
+import { deleteThanksgiving } from "../../api/thanksgiving/deleteThanks";
+import { updateThanksgiving } from "../../api/thanksgiving/updateThanks";
+import { getThanksById} from "../../api/thanksgiving/getThanksById";
 
 export default function Thanksgivings() {
   const navigate = useNavigate();
@@ -39,10 +39,6 @@ export default function Thanksgivings() {
       alert("Could not update record.");
     }
   };
-  
-  
-
-
 
   const fetchThanksgivings = React.useCallback(async () => {
     setLoading(true);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { forgotPassword } from "../api/auth/forgotPassword"; 
+import { forgotPassword } from "../../api/auth/forgotPassword"; 
 
 const ForgotPassword = () => {
     const location = useLocation();

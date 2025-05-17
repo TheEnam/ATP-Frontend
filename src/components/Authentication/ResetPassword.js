@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { resetPassword } from "../api/auth/resetPassword";
+import { resetPassword } from "../../api/auth/resetPassword";
 import { GoEye, GoEyeClosed } from "react-icons/go";
 
 const ResetPassword = () => {

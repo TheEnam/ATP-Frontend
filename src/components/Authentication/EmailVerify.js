@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { verifyEmail } from "../api/auth/verifyEmail";
+import { verifyEmail } from "../../api/auth/verifyEmail";
 
 const EmailVerify = () => {
   const [digits, setDigits] = useState(["", "", "", ""]);

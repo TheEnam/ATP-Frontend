@@ -28,10 +28,21 @@ export default function Login(){
       alert("Login successful!");
       localStorage.removeItem("attemptedEmail");
       console.log("Login success:", response);
+      console.log("Access Token:", response.accessToken);
+      localStorage.setItem("token", response.accessToken);
+      localStorage.setItem("refreshToken", response.refreshToken);
+      sessionStorage.setItem("token", response.accessToken);
+      sessionStorage.setItem("refreshToken", response.refreshToken);
+      const token = localStorage.getItem("token");
+      const refreshToken = localStorage.getItem("refreshToken");
+      console.log("Token:", token);
+      console.log("Refresh Token:", refreshToken);
       if (form.remember) {
-        localStorage.setItem("token", response.token);
+        localStorage.setItem("token", response.accessToken);
+        localStorage.setItem("refreshToken", response.refreshToken);
       } else {
-        sessionStorage.setItem("token", response.token);
+        sessionStorage.setItem("token", response.accessToken);
+        sessionStorage.setItem("refreshToken", response.refreshToken);
       }
 
       navigate("/dashboard");

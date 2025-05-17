@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { addThanks } from "../api/thanksgiving/addThanks";
 
 export default function AddThanksgiving() {
   const [formData, setFormData] = useState({
     name: "",
-    message: "",
-    offering: "",
+    amount: 0,
+    purpose: "",
     date: "",
   });
 
@@ -13,10 +14,20 @@ export default function AddThanksgiving() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form Submitted:", formData);
-    // You can add API call or state management logic here
+    try {
+      console.log("Sending data:", formData);
+      await addThanks(formData);
+  
+      alert("Thanksgiving added successfully!");
+      window.location.href = "/thanksgivings";
+      // Optionally clear form
+      setFormData({ name: "", purpose: "", amount: 0, date: "" });
+    } catch (error) {
+      console.error("Failed to add thanksgiving:", error);
+      alert("Failed to submit. Please try again!");
+    }
   };
 
   return (
@@ -37,28 +48,29 @@ export default function AddThanksgiving() {
             className="w-full p-2 border rounded-lg mt-1 bg-white text-black"
           />
 
-          {/* Message */}
+          {/* purpose */}
           <label className="block text-black font-medium mt-3">Message</label>
           <textarea
-            name="message"
-            value={formData.message}
+            name="purpose"
+            value={formData.purpose}
             onChange={handleChange}
             rows="4"
             required
             className="w-full p-2 border rounded-lg mt-1 bg-white text-black"
           ></textarea>
 
-          {/* Offering Amount */}
+          {/* Amount */}
           <label className="block text-black font-medium mt-3">
-            Offering Amount (GHS)
+            Amount (GHS)
           </label>
           <input
             type="number"
-            name="offering"
-            value={formData.offering}
+            name="amount"
+            value={formData.amount}
             onChange={handleChange}
             required
             className="w-full p-2 border rounded-lg mt-1 bg-white text-black"
+            min={0}
           />
 
           {/* Date */}

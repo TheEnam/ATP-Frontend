@@ -5,8 +5,7 @@ import { MdOutlineSettingsSuggest, MdDarkMode } from "react-icons/md";
 import { MdTransferWithinAStation } from "react-icons/md";
 import { GiPayMoney } from "react-icons/gi";
 import { IoIosArrowDown } from "react-icons/io";
-import { AiOutlineFileText } from "react-icons/ai";
-import { GrNotes } from "react-icons/gr";
+import { GrNotes, GrAnnounce} from "react-icons/gr";
 import { MdLogout } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
@@ -37,11 +36,11 @@ export default function Sidebar() {
             </Link>
   
             <Link to="/add-announcement" className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300">
-              <AiOutlineFileText />
+              <GrAnnounce />
               <p>Announcements</p>
             </Link>
   
-            <Link to="/add-thanksgiving" className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300">
+            <Link to="/thanksgivings" className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300">
               <GiPayMoney />
               <p>Thanksgiving</p>
             </Link>
@@ -54,7 +53,7 @@ export default function Sidebar() {
   
             <div className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300 cursor-pointer">
               <RiDeleteBin6Line />
-              <p>Deleted Announcements</p>
+              <p>Programs</p>
             </div>
           </div>
         </div>

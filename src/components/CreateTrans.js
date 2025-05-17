@@ -10,11 +10,11 @@ import { useNavigate } from "react-router-dom";
 export default function CreateTransfer() {
   const navigate = useNavigate();
   const [transferType, setTransferType] = useState("");
-  const [baptismalCert, setBaptismalCert] = useState(null);
+  // const [baptismalCert, setBaptismalCert] = useState(null);
 
-  const handleFileChange = (e) => {
-    setBaptismalCert(e.target.files[0]);
-  };
+  // const handleFileChange = (e) => {
+  //   setBaptismalCert(e.target.files[0]);
+  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -33,20 +33,20 @@ export default function CreateTransfer() {
           <input type="text" className="w-full p-2 mt-1 border rounded bg-white" required />
 
           {/* Date of Birth */}
-          <label className="block text-gray-700 font-medium mt-3">Date of Birth</label>
-          <input type="date" className="w-full p-2 mt-1 border rounded bg-white" required />
+          {/* <label className="block text-gray-700 font-medium mt-3">Date of Birth</label>
+          <input type="date" className="w-full p-2 mt-1 border rounded bg-white" required /> */}
 
           {/* Date of Baptism */}
-          <label className="block text-gray-700 font-medium mt-3">Date of Baptism</label>
-          <input type="date" className="w-full p-2 mt-1 border rounded bg-white" required />
+          {/* <label className="block text-gray-700 font-medium mt-3">Date of Baptism</label>
+          <input type="date" className="w-full p-2 mt-1 border rounded bg-white" required /> */}
 
           {/* Pastor Who Baptized */}
-          <label className="block text-gray-700 font-medium mt-3">Pastor Who Baptized</label>
-          <input type="text" className="w-full p-2 mt-1 border rounded bg-white" required />
+          {/* <label className="block text-gray-700 font-medium mt-3">Pastor Who Baptized</label>
+          <input type="text" className="w-full p-2 mt-1 border rounded bg-white" required /> */}
 
           {/* Names of Parents */}
-          <label className="block text-gray-700 font-medium mt-3">Names of Parents</label>
-          <input type="text" className="w-full p-2 mt-1 border rounded bg-white" required />
+          {/* <label className="block text-gray-700 font-medium mt-3">Names of Parents</label>
+          <input type="text" className="w-full p-2 mt-1 border rounded bg-white" required /> */}
 
           {/* Transfer Type */}
           <label className="block text-gray-700 font-medium mt-3">Transfer Type</label>
@@ -123,9 +123,9 @@ export default function CreateTransfer() {
           )}
 
           {/* Baptismal Certificate Upload */}
-          <label className="block text-gray-700 font-medium mt-3">Baptismal Certificate</label>
+          {/* <label className="block text-gray-700 font-medium mt-3">Baptismal Certificate</label>
           <input type="file" className="w-full p-2 mt-1 border rounded bg-white" onChange={handleFileChange} required />
-          {baptismalCert && <p className="text-sm text-gray-500">Uploaded: {baptismalCert.name}</p>}
+          {baptismalCert && <p className="text-sm text-gray-500">Uploaded: {baptismalCert.name}</p>} */}
 
           {/* Submit Button */}
           <button onClick={() => navigate("/all-transfers")}

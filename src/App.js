@@ -4,6 +4,8 @@ import Home from "./components/Home";
 import Dashboard from "./components/Dashboard";
 import AddAnn from "./components/AddAnn";
 import AddTh from "./components/AddTh";
+import Thanksgivings from "./components/Thanksgivings";
+import Announcements from "./components/Announcements";
 import Transfers from "./components/Transfers";
 import TransferDetails from "./components/TransferDetails";
 import CreateTrans from "./components/CreateTrans";
@@ -60,6 +62,14 @@ function App() {
           element={
             <AppLayout>
               <AddTh />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/thanksgivings"
+          element={
+            <AppLayout>
+              <Thanksgivings />
             </AppLayout>
           }
         />

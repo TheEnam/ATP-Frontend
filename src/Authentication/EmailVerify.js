@@ -10,6 +10,23 @@ const EmailVerify = () => {
   const location = useLocation();
   const inputRefs = useRef([]);
 
+  const handleVerify = React.useCallback(
+    async (t) => {
+      setMessage("Verifying...");
+      try {
+        const result = await verifyEmail(t);
+        console.log("Verification result:", result);
+        setMessage("Email verified successfully! Redirecting to login...");
+        setTimeout(() => navigate("/login"), 3000);
+      } catch (err) {
+        console.error("Verification failed:", err);
+        setMessage("Verification failed. Invalid or expired token.");
+        setManualEntry(true);
+      }
+    },
+    [navigate]
+  );
+
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const urlToken = queryParams.get("token");
@@ -20,21 +37,7 @@ const EmailVerify = () => {
       setMessage("Please enter the code you received.");
       setManualEntry(true);
     }
-  }, [location]);
-
-  const handleVerify = async (t) => {
-    setMessage("Verifying...");
-    try {
-      const result = await verifyEmail(t);
-      console.log("Verification result:", result);
-      setMessage("Email verified successfully! Redirecting to login...");
-      setTimeout(() => navigate("/login"), 3000);
-    } catch (err) {
-      console.error("Verification failed:", err);
-      setMessage("Verification failed. Invalid or expired token.");
-      setManualEntry(true);
-    }
-  };
+  }, [location.search, handleVerify]);
 
   const handleChange = (index, value) => {
     if (!/^\d*$/.test(value)) return; 

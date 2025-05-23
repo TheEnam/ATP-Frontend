@@ -7,7 +7,7 @@ export default function Login(){
   const [form, setForm] = useState({ email: "", password: "", remember: false });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const setLoading = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -50,12 +50,10 @@ export default function Login(){
       console.error("Login failed response:", err?.response?.data || err);
       setError(err?.response?.data?.message || "Login failed. Please try again.");
       localStorage.setItem("attemptedEmail", form.email);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <form
@@ -116,9 +114,10 @@ export default function Login(){
 
         <button
           type="submit"
-          className="w-full bg-black text-white p-2 rounded hover:bg-gray-800"
+          className={`w-full bg-black text-white p-2 rounded hover:bg-gray-800 ${loading ? "opacity-60 cursor-not-allowed" : ""}`}
+          disabled={loading}
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </button>
 
         <p className="text-center mt-4 text-sm text-gray-600">

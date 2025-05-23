@@ -35,7 +35,7 @@ export default function Sidebar() {
               <p>Dashboard</p>
             </Link>
   
-            <Link to="/add-announcement" className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300">
+            <Link to="/announcements" className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300">
               <GrAnnounce />
               <p>Announcements</p>
             </Link>

@@ -61,7 +61,7 @@ function App() {
           }
         />
         <Route
-          path="/announcement"
+          path="/announcements"
           element={
             <AppLayout>
               <Announcements/>

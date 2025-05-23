@@ -21,7 +21,7 @@ import {
 
 function AppLayout({ children }) {
   return (
-    <div className="flex flex-row border bg-gray-700 rounded-xl m-4 font-display">
+    <div className="flex flex-row border bg-gray-700 rounded-xl m-4 font-poppins">
       <Sidebar />
       <div className="flex-1">{children}</div>
     </div>

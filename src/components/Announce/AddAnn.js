@@ -29,7 +29,7 @@ export default function AddAnn() {
       navigate("/announcements");
     }catch (error) {
       if (error.response) {
-        console.error("Server error:", error.response);
+        console.error("Server error:", error?.response?.data);
         alert(`Error: ${error.response.data?.message || "Bad Request"}`);
       } else {
         console.error("Unexpected error:", error);
@@ -78,7 +78,7 @@ export default function AddAnn() {
             <option value="">Select</option>
             <option value="Local">Local</option>
             <option value="District">District</option>
-            <option value="Zone">Conference</option>
+            <option value="Zonal">Conference</option>
           </select>
 
           <label className="block text-gray-700 font-medium mt-3">Date</label>

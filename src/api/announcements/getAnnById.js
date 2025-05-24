@@ -6,11 +6,11 @@ export const getAnnById = async (id) => {
         throw new Error("No token found. Please log in.");
     }
 
-    try {
-        const response = await axios.get(`/announcement/${id}`);
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching announcement by ID:", error);
-        throw error;
-    }
+   
+    const response = await axios.get(`/announcement/${id}`);
+    return response.data;
+    // } catch (error) {
+    //     console.error("Error fetching announcement by ID:", error);
+    //     throw error;
+    // }
 }

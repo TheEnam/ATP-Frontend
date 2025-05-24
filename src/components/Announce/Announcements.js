@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { getAnn } from "../../api/announcements/getAnn";
+import { getAnnById } from "../../api/announcements/getAnnbyId";
 import { delAnn } from "../../api/announcements/delAnn";
 import { updateAnn } from "../../api/announcements/updateAnn";
-import { getAnnById } from "../../api/announcements/getAnnById";
 
 export default function Announcements() {
   const navigate = useNavigate();
@@ -24,7 +24,9 @@ export default function Announcements() {
     setEditMode(false);
   };
 
-  const fetchAnnouncements = async () => {
+  // ...other imports
+
+  const fetchAnnouncements = useCallback(async () => {
     setLoading(true);
     try {
       const data = await getAnn(filters);
@@ -34,7 +36,7 @@ export default function Announcements() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
 
   const handleSaveEdit = async () => {
     try {
@@ -56,7 +58,7 @@ export default function Announcements() {
 
   useEffect(() => {
     fetchAnnouncements();
-  }, []);
+  }, [fetchAnnouncements]);
 
   const handleFilterChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });

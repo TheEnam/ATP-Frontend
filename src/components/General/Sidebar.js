@@ -24,7 +24,7 @@ export default function Sidebar() {
       <div className="bg-gray-100 p-4 h-screen w-1/6 flex flex-col justify-between">
         {/* Top Section */}
         <div>
-          <Link to="/" className="flex flex-row items-center space-x-3 mb-7">
+          <Link to="/dashboard" className="flex flex-row items-center space-x-3 mb-7">
             <GrNotes />
             <p className="text-xl font-semibold">LESCetariat</p>
           </Link>

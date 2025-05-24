@@ -78,7 +78,7 @@ export default function AddAnn() {
             <option value="">Select</option>
             <option value="Local">Local</option>
             <option value="District">District</option>
-            <option value="Zone">Zone</option>
+            <option value="Zone">Conference</option>
           </select>
 
           <label className="block text-gray-700 font-medium mt-3">Date</label>

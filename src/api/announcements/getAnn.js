@@ -1,12 +1,12 @@
 import axios from "../axiosInstance";
 
 export const getAnn = async (filters) => {
-  const query = new URLSearchParams();
+  const params = {};
 
   if (filters.startDate) query.append("startDate", filters.startDate);
   if (filters.endDate) query.append("endDate", filters.endDate);
   if (filters.typeOfAnnouncement) query.append("typeOfAnnouncement", filters.typeOfAnnouncement);
 
-  const response = await axios.get(`/announcement`);
+  const response = await axios.get(`/announcement`,{params});
   return response.data;
 };

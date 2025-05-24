@@ -7,6 +7,6 @@ export const getAnn = async (filters) => {
   if (filters.endDate) query.append("endDate", filters.endDate);
   if (filters.typeOfAnnouncement) query.append("typeOfAnnouncement", filters.typeOfAnnouncement);
 
-  const response = await axios.get(`/announcement?${query.toString()}`);
+  const response = await axios.get(`/announcement`);
   return response.data;
 };

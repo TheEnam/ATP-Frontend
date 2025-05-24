@@ -22,7 +22,7 @@ export default function Transfers() {
   );
   
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-4">
       {/* Header with Create Transfer Button */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold">Transfers</h1>

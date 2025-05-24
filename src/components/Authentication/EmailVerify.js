@@ -68,7 +68,7 @@ const EmailVerify = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <div className="flex justify-center items-center h-auto bg-gray-100">
       <div className="bg-white p-6 rounded shadow text-center w-full max-w-md">
         <h2 className="text-lg font-semibold mb-3">Email Verification</h2>
         <p className="mb-4 text-gray-700">{message}</p>

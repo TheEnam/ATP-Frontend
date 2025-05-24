@@ -32,7 +32,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex-1 p-6 bg-gray-50 min-h-screen">
+    <div className="flex-1 p-4 bg-gray-50 min-h-screen">
       {/* Header */}
       <h2 className="text-xl font-semibold mb-5">Dashboard</h2>
       

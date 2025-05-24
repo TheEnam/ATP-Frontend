@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { getAnn } from "../../api/announcements/getAnn";
-import { getAnnById } from "../../api/announcements/getAnnbyId";
+import { getAnnbyId } from "../../api/announcements/getAnnbyId";
 import { delAnn } from "../../api/announcements/delAnn";
 import { updateAnn } from "../../api/announcements/updateAnn";
 
@@ -13,7 +13,7 @@ export default function Announcements() {
   const [filters, setFilters] = useState({
     startDate: "",
     endDate: "",
-    title: "",
+    typeOfAnnouncement: "",
   });
 
   const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
@@ -23,8 +23,6 @@ export default function Announcements() {
     setSelectedAnnouncement(null);
     setEditMode(false);
   };
-
-  // ...other imports
 
   const fetchAnnouncements = useCallback(async () => {
     setLoading(true);
@@ -98,14 +96,18 @@ export default function Announcements() {
           onChange={handleFilterChange}
           className="p-2 border rounded mb-2 md:mb-0"
         />
-        <input
-          type="text"
-          name="title"
-          value={filters.title}
+        <select
+          name="typeOfAnnouncement"
+          value={filters.typeOfAnnouncement}
           onChange={handleFilterChange}
-          placeholder="Title"
           className="p-2 border rounded mb-2 md:mb-0"
-        />
+        >
+          <option value="">All Types</option>
+          <option value="Local">Local</option>
+          <option value="District">District</option>
+          <option value="Zonal">Conference</option>
+        </select>
+
         <button type="submit" className="bg-black text-white p-2 rounded hover:bg-gray-800">
           Filter
         </button>
@@ -132,7 +134,7 @@ export default function Announcements() {
                   key={item._id}
                   className="border-t cursor-pointer hover:bg-gray-100 transition"
                   onClick={() =>
-                    getAnnById(item._id)
+                    getAnnbyId(item._id)
                       .then((data) => setSelectedAnnouncement(data))
                       .catch((err) => console.error("Error getting details:", err))
                   }

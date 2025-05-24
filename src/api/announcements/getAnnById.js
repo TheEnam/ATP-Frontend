@@ -1,6 +1,6 @@
 import axios from '../axiosInstance';
 
-export const getAnnById = async (id) => {
+export const getAnnbyId = async (id) => {
     const token = localStorage.getItem("token") || sessionStorage.getItem("token");
     if (!token) {
         throw new Error("No token found. Please log in.");

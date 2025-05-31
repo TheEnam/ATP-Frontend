@@ -7,11 +7,53 @@ import { IoSearchOutline } from "react-icons/io5";
 import { RiFilter3Line } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { HiOutlineUserGroup } from "react-icons/hi";
-import { FaFileAlt, FaFilePdf, FaFileExcel } from "react-icons/fa";
+// import { FaFileAlt, FaFilePdf, FaFileExcel } from "react-icons/fa";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  
+
+  const [programmes, setProgrammes] = useState([
+    { title: "Youth Summit", department: "Youth", date: "2025-05-25" },
+    { title: "Women's Conference", department: "Women's Ministry", date: "2025-05-27" },
+    { title: "Health Week", department: "Health Ministry", date: "2025-05-31"},
+    { title: "Men's Week of Prayer", department: "Men's Ministry", date: "2025-06-01" },
+    { title: "Family Retreat", department: "Family Life", date: "2025-06-05" },
+  ]);
+
+  const isToday = (dateString) => {
+    const inputDate = new Date(dateString);
+    const today = new Date();
+
+    return (
+      inputDate.getFullYear() === today.getFullYear() &&
+      inputDate.getMonth() === today.getMonth() &&
+      inputDate.getDate() === today.getDate()
+    );
+  };
+
+
+
+  const formatDate = (dateStr) =>
+    new Date(dateStr).toLocaleDateString("en-US", {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Normalize to start of day
+
+  const upcomingProgrammes = programmes
+    .filter((programme) => {
+      const programmeDate = new Date(programme.date);
+      programmeDate.setHours(0, 0, 0, 0);
+      return programmeDate >= today;
+    })
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+
+
   // Manage dropdown visibility
   const [showDropdown, setShowDropdown] = useState(null);
 
@@ -34,7 +76,7 @@ export default function Dashboard() {
   return (
     <div className="flex-1 p-4 bg-gray-50 min-h-screen">
       {/* Header */}
-      <h2 className="text-xl font-semibold mb-5">Dashboard</h2>
+      <h1 className="text-xl font-semibold mb-5">Dashboard</h1>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         {[
@@ -88,30 +130,36 @@ export default function Dashboard() {
         ))}
       </div>
 
-      {/* Recent Files */}
+      {/* Upcoming Programmes */}
       <div className="mb-6">
-        <h3 className="text-gray-700 text-sm mb-3 font-semibold">Recent</h3>
-        <div className="flex space-x-4 overflow-x-auto pb-2">
-            {[
-            { name: "Programme 1", icon: <FaFileAlt /> },
-            { name: "Announcement 1",icon: <FaFilePdf /> },
-            { name: "Transfer In", icon: <FaFileExcel /> },
-          ].map((file, idx) => (
-            <div
-              key={idx}
-              className="flex items-center justify-between w-80 p-4 bg-white rounded-lg border shadow-sm hover:shadow-md transition"
-            >
-              <div className="flex items-center space-x-3 hover:cursor-pointer">
-                <div className="text-xl">{file.icon}</div>
-                <div>
-                  <div className="text-sm">{file.name}</div>
-                </div>
-              </div>
-              <BsThreeDotsVertical className="text-gray-500" />
-            </div>
-          ))}
+        <div className="flex justify-between items-center mb-3">
+          <h2 className="text-gray-700 text-md font-semibold">Upcoming Programmes</h2>
         </div>
+        {upcomingProgrammes.length === 0 ? (
+          <p className="text-gray-500 text-sm">No upcoming programmes.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {upcomingProgrammes.map((programme, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-lg border shadow-sm p-4 hover:shadow-md transition"
+              >
+                <h3 className="font-semibold mb-1">{programme.title}</h3>
+                <p className="text-gray-600 text-sm mb-2">{programme.department}</p>
+                <p className="text-sm">
+                  {isToday(programme.date) ? (
+                    <span className="text-red-500 font-semibold">Today</span>
+                  ) : (
+                    new Date(programme.date).toDateString()
+                  )}
+                </p>
+              </div>
+            ))}
+          </div>
+
+        )}
       </div>
+
 
       <h3 className="text-gray-700 text-sm font-semibold mb-3">All Items</h3>
 

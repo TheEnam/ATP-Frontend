@@ -1,11 +1,14 @@
 import React  from "react";
+import { useNavigate } from "react-router-dom";
 
-const handleCreate = async () => {
-  // await createTransfer(form);
-  // alert("Transfer created!");
-}
 
 export default function CreateProgramme () {
+  const navigate = useNavigate();
+  
+  const handleCreate = async () => {
+    // await createTransfer(form);
+    // alert("Transfer created!");
+  }
   return (
     <div>
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -25,12 +28,25 @@ export default function CreateProgramme () {
             <textarea
               name="description"
               rows="4"
-              required
               className="w-full p-2 mt-1 border rounded bg-white text-gray-700"
             ></textarea>
-            <button
+            <label className="block text-gray-700 font-medium mt-3">Department</label>
+            <input
+              type="text"
+              name="department"
+              required
+              className="w-full p-2 mt-1 border rounded bg-white text-gray-700" 
+            />
+            <label className="block text-gray-700 font-medium mt-3">Date</label>
+            <input
+              type="date"
+              name="date"
+              required
+              className="w-full p-2 mt-1 border rounded bg-white text-gray-700"
+            />
+            <button onClick={ () => navigate("/programmes")}
               type="submit"
-              className="w-full mt-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-200"
+              className="w-full mt-4 py-2 border border-black rounded-lg bg-transparent text-black font-bold hover:bg-black hover:text-white transition duration-200"
             >
               Create Programme
             </button>

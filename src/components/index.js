@@ -23,3 +23,7 @@ export { default as VerifyEmail } from './Authentication/VerifyEmail';
 export {default as Sidebar} from './General/Sidebar';
 export {default as Dashboard} from './General/Dashboard';
 export {default as Home} from './General/Home';
+
+// Programme
+export { default as Programmes } from './Programmes/Programmes';
+export { default as CreateProgramme } from './Programmes/CreateProgramme';

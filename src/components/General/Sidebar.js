@@ -1,13 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { RiHomeSmile2Line, RiDeleteBin6Line } from "react-icons/ri";
-import { MdOutlineSettingsSuggest, MdDarkMode } from "react-icons/md";
-import { MdTransferWithinAStation } from "react-icons/md";
+import { Link, useNavigate} from "react-router-dom";
+import { RiHomeSmile2Line } from "react-icons/ri";
+import { MdOutlineSettingsSuggest, MdDarkMode, MdEventAvailable, MdTransferWithinAStation} from "react-icons/md";
 import { GiPayMoney } from "react-icons/gi";
-import { IoIosArrowDown } from "react-icons/io";
+// import { IoIosArrowDown } from "react-icons/io";
 import { GrNotes, GrAnnounce} from "react-icons/gr";
 import { MdLogout } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
 
 export default function Sidebar() {
     const navigate = useNavigate();
@@ -51,24 +49,24 @@ export default function Sidebar() {
             </Link>
   
   
-            <div className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300 cursor-pointer">
-              <RiDeleteBin6Line />
+            <Link to='/programmes' className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300 cursor-pointer">
+              <MdEventAvailable />
               <p>Programs</p>
-            </div>
+            </Link>
           </div>
         </div>
   
         {/* Bottom Section */}
         <div className="text-gray-500 flex flex-col space-y-4">
-          <p>Announcement Browser</p>
-          <div className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300 cursor-pointer">
+          {/* <p>Announcement Browser</p> */}
+          {/* <div className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300 cursor-pointer">
             <IoIosArrowDown />
             <p>Announcements</p>
-          </div>
-          <div className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300 cursor-pointer">
+          </div> */}
+          {/* <div className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300 cursor-pointer">
               <MdTransferWithinAStation />
               <p>Transfers</p>
-            </div>
+          </div> */}
           <div className="flex flex-row items-center space-x-3 p-2 rounded-lg hover:bg-gray-300 cursor-pointer">
             <MdDarkMode />
             <p>Dark Mode</p>

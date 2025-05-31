@@ -5,6 +5,8 @@ import {
   Sidebar,
   Dashboard,
   Home,
+  Programmes,
+  CreateProgramme,
   Thanksgivings,
   AddTh,
   Transfers,
@@ -106,6 +108,22 @@ function App() {
             element={
               <AppLayout>
                 <Transfers />
+              </AppLayout>
+            }
+          />
+          <Route
+            path="/programmes"
+            element={
+              <AppLayout>
+                <Programmes />
+              </AppLayout>
+            }
+            />
+          <Route
+            path="/create-programme"
+            element={
+              <AppLayout>
+                <CreateProgramme />
               </AppLayout>
             }
           />

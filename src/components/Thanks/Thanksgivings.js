@@ -44,7 +44,9 @@ export default function Thanksgivings() {
     setLoading(true);
     try {
       const data = await getThanksgivings(filters);
-      setThanksgivings(data);
+      console.log("API Response:", data);
+      const res = Array.isArray(data) ? data : data?.res || [];
+      setThanksgivings(res);
       console.log("Fetched thanksgivings:", data);
     } catch (error) {
       console.error("Error fetching thanksgivings:", error);
@@ -130,7 +132,7 @@ export default function Thanksgivings() {
               </tr>
             </thead>
             <tbody>
-              {thanksgivings.map((tg) => (
+              {(thanksgivings || []).map((tg) => (
                 <tr
                   key={tg._id}
                   className="border-t cursor-pointer hover:bg-gray-100 transition"

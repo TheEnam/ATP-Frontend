@@ -1,16 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AiOutlineFileText } from "react-icons/ai";
 import { MdTransferWithinAStation } from "react-icons/md";
 import { GiPayMoney } from "react-icons/gi";
-import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoSearchOutline } from "react-icons/io5";
 import { RiFilter3Line } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { HiOutlineUserGroup } from "react-icons/hi";
-// import { FaFileAlt, FaFilePdf, FaFileExcel } from "react-icons/fa";
+import { getAnn } from "../../api/announcements/getAnn";
+import { getThanksgivings } from "../../api/thanksgiving/seeThanks";
+// import { getTransfers } from "../../api/transfers/getTransfers";
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const [announcements, setAnnouncements] = useState([]);
+  const [thanksgivings, setThanksgivings] = useState([]);
+  const [transfers, setTransfers] = useState([]);
+  const [error, setError] = useState(null);
+
+  const [selectedFilter, setSelectedFilter] = useState("View all");
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const annData = await getAnn();         // Call your imported function
+        const thanksData = await getThanksgivings();   // Call your imported function
+        // const transferData = await getTransfers(); // Call your transfers function
+
+        setAnnouncements(annData);
+        setThanksgivings(thanksData);
+        // setTransfers(transferData);
+      } catch (err) {
+        setError("Failed to fetch data");
+      }
+    }
+
+    fetchData();
+  }, []);
+
+
 
   const [programmes, setProgrammes] = useState([
     { title: "Youth Summit", department: "Youth", date: "2025-05-25" },
@@ -20,9 +47,11 @@ export default function Dashboard() {
     { title: "Family Retreat", department: "Family Life", date: "2025-06-05" },
   ]);
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   const isToday = (dateString) => {
     const inputDate = new Date(dateString);
-    const today = new Date();
 
     return (
       inputDate.getFullYear() === today.getFullYear() &&
@@ -31,18 +60,28 @@ export default function Dashboard() {
     );
   };
 
+  const isUpcoming = (item) => new Date(item.date) >= today;
+  const sortByDateAsc = (a, b) => new Date(a.date) - new Date(b.date);
 
+  const upcomingAnnouncements = announcements.filter(isUpcoming).sort(sortByDateAsc);
+  const upcomingThanksgivings = thanksgivings.filter(isUpcoming).sort(sortByDateAsc);
+  const upcomingTransfers = transfers.filter(isUpcoming).sort(sortByDateAsc);
 
-  const formatDate = (dateStr) =>
-    new Date(dateStr).toLocaleDateString("en-US", {
-      weekday: "short",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
+  const allItems = [...upcomingAnnouncements, ...upcomingTransfers, ...upcomingThanksgivings];
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0); // Normalize to start of day
+  let displayedItems = [];
+
+  if (selectedFilter === "View all") displayedItems = allItems;
+  else if (selectedFilter === "Announcements") displayedItems = upcomingAnnouncements;
+  else if (selectedFilter === "Transfers") displayedItems = upcomingTransfers;
+  else if (selectedFilter === "Thanksgiving") displayedItems = upcomingThanksgivings;
+  else displayedItems = [];
+
+  // Manage dropdown visibility
+  // const [showDropdown, setShowDropdown] = useState(null);
+
+  if (error) return <p>{error}</p>;
+  // Filter programmes to show only upcoming ones
 
   const upcomingProgrammes = programmes
     .filter((programme) => {
@@ -52,26 +91,21 @@ export default function Dashboard() {
     })
     .sort((a, b) => new Date(a.date) - new Date(b.date));
 
+  // const toggleDropdown = (index) => {
+  //   setShowDropdown(showDropdown === index ? null : index);  // Toggle dropdown visibility
+  // };
 
+  // const handleEdit = (itemName) => {
+  //   console.log(`Editing ${itemName}`);
+  //   // You can navigate to the editing page or open a modal for editing
+  //   // navigate(`/edit-announcement/${itemName}`);
+  // };
 
-  // Manage dropdown visibility
-  const [showDropdown, setShowDropdown] = useState(null);
-
-  const toggleDropdown = (index) => {
-    setShowDropdown(showDropdown === index ? null : index);  // Toggle dropdown visibility
-  };
-
-  const handleEdit = (itemName) => {
-    console.log(`Editing ${itemName}`);
-    // You can navigate to the editing page or open a modal for editing
-    // navigate(`/edit-announcement/${itemName}`);
-  };
-
-  const handleDelete = (itemName) => {
-    console.log(`Deleting ${itemName}`);
-    // You can show a confirmation dialog before deleting
-    // Confirm and delete the item
-  };
+  // const handleDelete = (itemName) => {
+  //   console.log(`Deleting ${itemName}`);
+  //   // You can show a confirmation dialog before deleting
+  //   // Confirm and delete the item
+  // };
 
   return (
     <div className="flex-1 p-4 bg-gray-50 min-h-screen">
@@ -165,16 +199,21 @@ export default function Dashboard() {
 
       {/* File Filters + Search */}
        <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
-         <div className="flex flex-wrap space-x-3 bg-gray-100 p-2 border-transparent shadow-sm">
-           {["View all", "Announcements", "Thanksgiving", "Transfers", "Others"].map((label, idx) => (
-            <button
-              key={idx}
-              className="px-4 py-2 rounded-lg text-sm text-sm border hover:bg-gray-50 hover:shadow-md transition"
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+          <div className="flex flex-wrap space-x-3 bg-gray-100 p-2 rounded mb-4">
+            {["View all", "Announcements", "Thanksgiving", "Transfers"].map((label) => (
+              <button
+                key={label}
+                onClick={() => setSelectedFilter(label)}
+                className={`px-4 py-2 rounded-lg text-sm border transition ${
+                  selectedFilter === label
+                    ? "bg-white text-black"
+                    : "text-gray-700 border-transparent hover:bg-gray-200"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
 
         <div className="flex items-center space-x-3">
           <div className="relative">
@@ -192,58 +231,18 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Announcements Table */}
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b text-left bg-gray-200">
-              <th className="p-3">Title</th>
-              <th className="p-3">Last Modified</th>
-              <th className="p-3 text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[{ name: "Announcement 1", date: "Mar 6, 2025" },
-              { name: "Thanksgiving 1", date: "Mar 4, 2025" },
-              { name: "Lorem Ipsum .......", date: "Mar 8, 2025" }].map((file, index) => (
-              <tr key={index} className="border-b hover:bg-gray-100 hover:shadow-md">
-                <td className="p-3 flex items-center space-x-2">
-                  <AiOutlineFileText className="text-gray-500" />
-                  <span>{file.name}</span>
-                </td>
-                <td className="p-3">{file.date}</td>
-                <td className="p-3 text-center">
-                  <button 
-                    className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200"
-                    onClick={() => toggleDropdown(index)}
-                  >
-                    <BsThreeDotsVertical />
-                  </button>
-
-                  {/* Dropdown Menu */}
-                  {showDropdown === index && (
-                    <div className="absolute bg-white border rounded-md shadow-md mt-2 right-0 z-10">
-                      <ul className="text-sm text-gray-700">
-                        <li
-                          className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleEdit(file.name)}
-                        >
-                          Edit
-                        </li>
-                        <li
-                          className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleDelete(file.name)}
-                        >
-                          Delete
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {/* Displayed Items List */}
+      <div>
+        {displayedItems.length === 0 ? (
+          <p className="text-gray-500">No upcoming {selectedFilter.toLowerCase()}.</p>
+        ) : (
+          displayedItems.map((item) => (
+            <div key={item.id} className="p-3 mb-2 bg-white rounded shadow">
+              <p className="font-semibold">{item.name}</p>
+              <p className="text-sm text-gray-600">{new Date(item.date).toDateString()}</p>
+            </div>
+          ))
+        )}
       </div>
 
       {/* Pagination */}

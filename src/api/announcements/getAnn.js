@@ -1,12 +1,14 @@
 import axios from "../axiosInstance";
 
-export const getAnn = async (filters) => {
-  const params = {};
+export const getAnn = async(typeOfAnnouncement = null) => {
+  try {
+    const response = await axios.get(`/announcement`, {
+      params: typeOfAnnouncement ? { typeOfAnnouncement } : {},
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching announcements:", error.response || error.message);
+    throw error;
+  }
+}
 
-  if (filters.startDate) params.startDate = filters.startDate;
-  if (filters.endDate) params.endDate = filters.endDate;
-  if (filters.typeOfAnnouncement) params.typeOfAnnouncement = filters.typeOfAnnouncement;
-
-  const response = await axios.get(`/announcement`,{params});
-  return response.data;
-};

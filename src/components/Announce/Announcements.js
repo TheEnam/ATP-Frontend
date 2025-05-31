@@ -11,8 +11,6 @@ export default function Announcements() {
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
-    startDate: "",
-    endDate: "",
     typeOfAnnouncement: "",
   });
 
@@ -24,17 +22,23 @@ export default function Announcements() {
     setEditMode(false);
   };
 
-  const fetchAnnouncements = useCallback(async () => {
-    setLoading(true);
-    try {
-      const data = await getAnn(filters);
-      setAnnouncements(data);
-    } catch (error) {
-      console.error("Error fetching announcements:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [filters]);
+    // Fetch announcements function
+    const fetchAnnouncements = useCallback(async () => {
+      setLoading(true);
+      try {
+        console.log("Fetching with filters:", filters);
+        const data = await getAnn(filters.typeOfAnnouncement);
+        setAnnouncements(data);
+      } catch (error) {
+        console.error("Error fetching announcements:", error);
+      } finally {
+        setLoading(false);
+      }
+    }, [filters]);
+  
+    useEffect(() => {
+      fetchAnnouncements();
+    }, [filters, fetchAnnouncements]);
 
   const handleSaveEdit = async () => {
     try {
@@ -82,20 +86,7 @@ export default function Announcements() {
 
       {/* Filter */}
       <form onSubmit={handleFilterSubmit} className="flex flex-col md:flex-row md:space-x-4 mb-6">
-        <input
-          type="date"
-          name="startDate"
-          value={filters.startDate}
-          onChange={handleFilterChange}
-          className="p-2 border rounded mb-2 md:mb-0"
-        />
-        <input
-          type="date"
-          name="endDate"
-          value={filters.endDate}
-          onChange={handleFilterChange}
-          className="p-2 border rounded mb-2 md:mb-0"
-        />
+
         <select
           name="typeOfAnnouncement"
           value={filters.typeOfAnnouncement}
@@ -107,6 +98,7 @@ export default function Announcements() {
           <option value="District">District</option>
           <option value="Zonal">Conference</option>
         </select>
+
 
         <button type="submit" className="bg-black text-white p-2 rounded hover:bg-gray-800">
           Filter

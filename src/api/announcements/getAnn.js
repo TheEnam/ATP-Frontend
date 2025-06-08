@@ -7,7 +7,7 @@ export const getAnn = async (typeOfAnnouncement = null) => {
     });
 
     const data = response.data;
-    console.log("Announcements data from API:", response.data);
+    console.log("Announcements data from API:", response);
 
     if (Array.isArray(data)) return data;
     if (Array.isArray(data.announcements)) return data.announcements;

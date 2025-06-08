@@ -16,5 +16,7 @@ export const getThanksgivings = async (filters = {}) => {
             Authorization: `Bearer ${token}`,
         },
     });
-    return response.data;
+
+    const data = response.data;
+    return Array.isArray(data) ? data : data.thanksgivings || [];
   };

@@ -64,7 +64,7 @@ const Section = ({ title, items }) => {
         <div className="flex-1 h-px bg-gray-300 mr-3 flex items-center justify-end">
           {/* Left line with repeated icon */}
           <div className="flex space-x-1 text-gray-400">
-            {[...Array(4)].map((_, i) => (
+            {[...Array(7)].map((_, i) => (
               <TiInfinityOutline key={i} />
             ))}
           </div>
@@ -77,7 +77,7 @@ const Section = ({ title, items }) => {
         <div className="flex-1 h-px bg-gray-300 ml-3 flex items-center justify-start">
           {/* Right line with repeated icon */}
           <div className="flex space-x-1 text-gray-400">
-            {[...Array(4)].map((_, i) => (
+            {[...Array(7)].map((_, i) => (
               <LiaGripLinesSolid key={i} />
             ))}
           </div>

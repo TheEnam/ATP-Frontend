@@ -22,13 +22,12 @@ export default function Dashboard() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const annData = await getAnn();         // Call your imported function
-        const thanksData = await getThanksgivings();   // Call your imported function
-        // const transferData = await getTransfers(); // Call your transfers function
+        const annData = await getAnn();
+        const thanksData = await getThanksgivings();
 
-        setAnnouncements(annData);
-        setThanksgivings(thanksData);
-        // setTransfers(transferData);
+        // Ensure array fallback to prevent `.filter` crash
+        setAnnouncements(Array.isArray(annData) ? annData : []);
+        setThanksgivings(Array.isArray(thanksData) ? thanksData : []);
       } catch (err) {
         setError("Failed to fetch data");
       }
@@ -37,14 +36,12 @@ export default function Dashboard() {
     fetchData();
   }, []);
 
-
-
   const [programmes, setProgrammes] = useState([
     { title: "Youth Summit", department: "Youth", date: "2025-05-25" },
-    { title: "Women's Conference", department: "Women's Ministry", date: "2025-05-27" },
-    { title: "Health Week", department: "Health Ministry", date: "2025-05-31"},
-    { title: "Men's Week of Prayer", department: "Men's Ministry", date: "2025-06-01" },
-    { title: "Family Retreat", department: "Family Life", date: "2025-06-05" },
+    { title: "Women's Conference", department: "Women's Ministry", date: "2025-07-27" },
+    { title: "Health Week", department: "Health Ministry", date: "2025-08-31"},
+    { title: "Men's Week of Prayer", department: "Men's Ministry", date: "2025-06-10" },
+    { title: "Family Retreat", department: "Family Life", date: "2025-06-27" },
   ]);
 
   const today = new Date();

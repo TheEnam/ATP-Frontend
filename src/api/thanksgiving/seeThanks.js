@@ -18,7 +18,7 @@ export const getThanksgivings = async (filters = {}) => {
     });
 
     const data = response.data;
-    console.log("Thanks data from API:", response);
+    console.log("Thanks data from API:", response.data);
 
     return Array.isArray(data) ? data : data.thanksgivings || [];
   };

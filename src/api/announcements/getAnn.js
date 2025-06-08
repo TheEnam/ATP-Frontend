@@ -7,12 +7,12 @@ export const getAnn = async (typeOfAnnouncement = null) => {
     });
 
     const data = response.data;
+    console.log("Announcements data from API:", data);
 
-    // Ensure it's always an array
     if (Array.isArray(data)) return data;
     if (Array.isArray(data.announcements)) return data.announcements;
 
-    return []; // fallback to empty array if none found
+    return [];
   } catch (error) {
     console.error("Error fetching announcements:", error.response || error.message);
     return [];

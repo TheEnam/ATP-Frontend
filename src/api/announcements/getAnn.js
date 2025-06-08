@@ -1,8 +1,8 @@
-import axios from "../axiosInstance";
+import axiosInstance from "../axiosInstance";
 
 export const getAnn = async (typeOfAnnouncement = null) => {
   try {
-    const response = await axios.get(`/announcement`, {
+    const response = await axiosInstance.get(`/announcement`, {
       params: typeOfAnnouncement ? { typeOfAnnouncement } : {},
     });
 

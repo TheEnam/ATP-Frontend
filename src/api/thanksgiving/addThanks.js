@@ -1,4 +1,4 @@
-import axios from '../axiosInstance';   
+import axiosInstance from '../axiosInstance';   
 
 export const addThanks = async (data) => {
   console.log("Data to be sent:", data);
@@ -7,7 +7,7 @@ export const addThanks = async (data) => {
   //   throw new Error("No token found. Please log in.");
   // }
 
-  return await axios.post("/thanksgiving", 
+  return await axiosInstance.post("/thanksgiving", 
     {
       memberName: data.name.trim(),
       amount: Number(data.amount),

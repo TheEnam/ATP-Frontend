@@ -1,4 +1,4 @@
-import axios from '../axiosInstance';
+import axiosInstance from '../axiosInstance';
 
 export const getThanksgivings = async (filters = {}) => {
     const token = localStorage.getItem("token") || sessionStorage.getItem("token");
@@ -11,7 +11,7 @@ export const getThanksgivings = async (filters = {}) => {
     if (filters.endDate) params.append("endDate", filters.endDate);
     if (filters.name) params.append("name", filters.name);
   
-    const response = await axios.get(`/thanksgiving?${params.toString()}`,{
+    const response = await axiosInstance.get(`/thanksgiving?${params.toString()}`,{
         headers: {
             Authorization: `Bearer ${token}`,
         },

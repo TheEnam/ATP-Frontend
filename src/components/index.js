@@ -1,6 +1,7 @@
 // Announcements
 export { default as AddAnn } from './Announce/AddAnn';
 export { default as Announcements } from './Announce/Announcements';
+export { default as AnnouncementMode } from './Announce/AnnouncementMode';
 
 // Thanks
 export { default as Thanksgivings } from './Thanks/Thanksgivings';

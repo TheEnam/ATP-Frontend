@@ -16,7 +16,7 @@ export default function CreateProgramme () {
           <h2 className="text-center text-xl font-semibold text-gray-800 mb-4">
             Create Programme
           </h2>
-          <form onSubmit={handleCreate}>
+          <form id="add-program" onSubmit={handleCreate}>
             <label className="block text-gray-700 font-medium">Programme Name</label>
             <input
               type="text"

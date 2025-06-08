@@ -74,7 +74,7 @@ const EmailVerify = () => {
         <p className="mb-4 text-gray-700">{message}</p>
 
         {manualEntry && (
-          <form onSubmit={handleSubmit}>
+          <form  id="otp-code" onSubmit={handleSubmit}>
             <div className="flex justify-center gap-3 mb-4">
               {digits.map((digit, index) => (
                 <input

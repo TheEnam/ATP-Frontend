@@ -23,29 +23,31 @@ export default function Announcements() {
   };
 
     // Fetch announcements function
-    const fetchAnnouncements = useCallback(async () => {
-      setLoading(true);
-      try {
-        console.log("Fetching with filters:", filters);
-        const data = await getAnn(filters.typeOfAnnouncement);
-        setAnnouncements(data);
-      } catch (error) {
-        console.error("Error fetching announcements:", error);
-      } finally {
-        setLoading(false);
-      }
-    }, [filters]);
-  
-    useEffect(() => {
-      fetchAnnouncements();
-    }, [filters, fetchAnnouncements]);
+  const fetchAnnouncements = useCallback(async () => {
+    setLoading(true);
+    try {
+      console.log("Fetching with filters:", filters);
+      const data = await getAnn(filters.typeOfAnnouncement);
+      setAnnouncements(data);
+    } catch (error) {
+      console.error("Error fetching announcements:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [filters]);
+
+  useEffect(() => {
+    fetchAnnouncements();
+  }, [filters, fetchAnnouncements]);
 
   const handleSaveEdit = async () => {
     try {
       const updatedData = {
         title: selectedAnnouncement.title.trim(),
-        content: selectedAnnouncement.content.trim(),
-        date: new Date(selectedAnnouncement.date).toISOString(),
+        description: selectedAnnouncement.description.trim(),
+        dateOfAnnouncement: new Date(selectedAnnouncement.dateOfAnnouncement),
+        is_recurring: selectedAnnouncement.is_recurring || false,
+        typeOfAnnouncement: selectedAnnouncement.typeOfAnnouncement,
       };
 
       await updateAnn(selectedAnnouncement._id, updatedData);
@@ -85,7 +87,7 @@ export default function Announcements() {
       </div>
 
       {/* Filter */}
-      <form onSubmit={handleFilterSubmit} className="flex flex-col md:flex-row md:space-x-4 mb-6">
+      <form id="filter-announcement" onSubmit={handleFilterSubmit} className="flex flex-col md:flex-row md:space-x-4 mb-6">
 
         <select
           name="typeOfAnnouncement"
@@ -132,9 +134,13 @@ export default function Announcements() {
                   }
                 >
                   <td className="p-3">{item.title}</td>
-                  <td className="p-3 truncate max-w-xs">{item.content}</td>
+                  <td className="p-3 truncate max-w-xs">{item.description}</td>
                   <td className="p-3">
-                    {new Date(item.date).toLocaleDateString("en-GB")}
+                    {new Date(item.dateOfAnnouncement).toLocaleDateString("en-GB", {
+                      month: "2-digit",
+                      day: "2-digit",
+                      year: "numeric",
+                    })}
                   </td>
                 </tr>
               ))}
@@ -151,10 +157,11 @@ export default function Announcements() {
                 >
                   &times;
                 </button>
-                <h2 className="text-xl font-semibold mb-4">Announcement Details</h2>
+                <h2 className="text-xl font-bold mb-4">Announcement Details</h2>
 
                 {editMode ? (
                   <>
+                  <label className="block mb-2 font-semibold">Title</label>
                     <input
                       className="w-full p-2 border rounded mb-2"
                       value={selectedAnnouncement.title}
@@ -162,21 +169,56 @@ export default function Announcements() {
                         setSelectedAnnouncement({ ...selectedAnnouncement, title: e.target.value })
                       }
                     />
+
+                    <label className="block mb-2 font-semibold">Type of Announcement</label>
+                    <select
+                      className="w-full p-2 border rounded mb-2"
+                      value={selectedAnnouncement.typeOfAnnouncement}
+                      onChange={(e) =>
+                        setSelectedAnnouncement({ ...selectedAnnouncement, typeOfAnnouncement: e.target.value })
+                      }>
+                      <option value="Local">Local</option>
+                      <option value="District">District</option>
+                      <option value="Zonal">Conference</option>
+                    </select>
+
+                    <label className="block mb-2 font-semibold">Description</label>
                     <textarea
                       className="w-full p-2 border rounded mb-2"
-                      value={selectedAnnouncement.content}
+                      value={selectedAnnouncement.description}
                       onChange={(e) =>
-                        setSelectedAnnouncement({ ...selectedAnnouncement, content: e.target.value })
+                        setSelectedAnnouncement({ ...selectedAnnouncement, description: e.target.value })
                       }
                     />
+
                     <input
                       type="date"
+                      required
                       className="w-full p-2 border rounded mb-2"
-                      value={selectedAnnouncement.date?.slice(0, 10)}
+                      value={selectedAnnouncement.dateOfAnnouncement?.slice(0, 10) || ""}
                       onChange={(e) =>
-                        setSelectedAnnouncement({ ...selectedAnnouncement, date: e.target.value })
+                        setSelectedAnnouncement({
+                          ...selectedAnnouncement,
+                          dateOfAnnouncement: e.target.value,
+                        })
                       }
                     />
+
+                    <label className="inline-flex items-center mb-2">
+                      <input
+                        type="checkbox"
+                        checked={!!selectedAnnouncement.is_recurring}
+                        onChange={(e) =>
+                          setSelectedAnnouncement({
+                            ...selectedAnnouncement,
+                            is_recurring: e.target.checked,
+                          })
+                        }
+                        className="form-checkbox"
+                      />
+
+                      <span className="ml-2">Is Recurring</span>
+                    </label>
                     <div className="flex justify-end gap-2">
                       <button
                         onClick={handleSaveEdit}
@@ -195,10 +237,15 @@ export default function Announcements() {
                 ) : (
                   <>
                     <p><strong>Title:</strong> {selectedAnnouncement.title}</p>
-                    <p><strong>Content:</strong> {selectedAnnouncement.content}</p>
+                    <p><strong>Content:</strong> {selectedAnnouncement.description}
+                    </p>
                     <p>
                       <strong>Date:</strong>{" "}
-                      {new Date(selectedAnnouncement.date).toLocaleDateString("en-GB")}
+                      {new Date(selectedAnnouncement.dateOfAnnouncement).toLocaleDateString("en-GB", {
+                      month: "2-digit",
+                      day: "2-digit",
+                      year: "numeric",
+                    })}
                     </p>
                   </>
                 )}
@@ -239,6 +286,14 @@ export default function Announcements() {
           )}
         </div>
       )}
+      <div className="flex justify-center mt-10">
+        <button
+          onClick={() => navigate("/announcement-mode")}
+          className="bg-gray-500 text-white px-3 py-3 rounded hover:bg-black transition"
+        >
+          📢 View in Announcement Mode
+        </button>
+      </div>
     </div>
   );
 }

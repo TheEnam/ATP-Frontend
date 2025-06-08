@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import {
   AddAnn,
   Announcements,
+  AnnouncementMode,
   Sidebar,
   Dashboard,
   Home,
@@ -68,6 +69,14 @@ function App() {
             element={
               <AppLayout>
                 <Announcements/>
+              </AppLayout>
+            }
+          />
+          <Route
+            path="/announcement-mode"
+            element={
+              <AppLayout>
+                <AnnouncementMode />
               </AppLayout>
             }
           />

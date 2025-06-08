@@ -44,7 +44,7 @@ export default function AddAnn() {
         <h2 className="text-center text-xl font-semibold text-gray-800 mb-4">
           Add New Announcement
         </h2>
-        <form onSubmit={handleSubmit}>
+        <form id="add-announcement" onSubmit={handleSubmit}>
           <label className="block text-gray-700 font-medium">Title</label>
           <input
             type="text"

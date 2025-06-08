@@ -82,7 +82,7 @@ export default function Thanksgivings() {
       </div>
 
       {/* Filter Form */}
-      <form onSubmit={handleFilterSubmit} className="flex flex-col md:flex-row md:space-x-4 mb-6">
+      <form id="filter-thanks" onSubmit={handleFilterSubmit} className="flex flex-col md:flex-row md:space-x-4 mb-6">
         <input
           type="date"
           name="startDate"
@@ -127,7 +127,7 @@ export default function Thanksgivings() {
               <tr>
                 <th className="p-3 text-left">Name</th>
                 <th className="p-3 text-left">Purpose</th>
-                <th className="p-3 text-left">Amount (GHS)</th>
+                {/* <th className="p-3 text-left">Amount (GHS)</th> */}
                 <th className="p-3 text-left">Date (dd/mm/yy)</th>
               </tr>
             </thead>
@@ -148,7 +148,7 @@ export default function Thanksgivings() {
                 >
                   <td className="p-3">{tg.memberName}</td>
                   <td className="p-3">{tg.message}</td>
-                  <td className="p-3">{tg.amount}</td>
+                  {/* <td className="p-3">{tg.amount}</td> */}
                   <td className="p-3">
                     {new Date(tg.dateOfThanksgiving).toLocaleDateString("en-GB", {
                       month: "2-digit",

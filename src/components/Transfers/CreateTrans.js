@@ -27,7 +27,7 @@ export default function CreateTransfer() {
         <h2 className="text-center text-xl font-semibold text-gray-800 mb-4">
           Create Transfer
         </h2>
-        <form onSubmit={handleSubmit}>
+        <form id="create-transfer" onSubmit={handleSubmit}>
           {/* Full Name */}
           <label className="block text-gray-700 font-medium">Full Name</label>
           <input type="text" className="w-full p-2 mt-1 border rounded bg-white" required />

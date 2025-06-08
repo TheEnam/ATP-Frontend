@@ -36,7 +36,7 @@ export default function AddThanksgiving() {
         <h2 className="text-center text-xl font-semibold text-black mb-4">
           Add Thanksgiving
         </h2>
-        <form onSubmit={handleSubmit}>
+        <form id="add-thanks" onSubmit={handleSubmit}>
           {/* Name of Person */}
           <label className="block text-black font-medium">Name of Person</label>
           <input

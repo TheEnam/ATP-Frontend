@@ -51,6 +51,14 @@ export default function Programmes() {
           </div>
         ))}
       </div>
+      <div className="flex justify-center mt-10">
+        <button
+          onClick={() => navigate("/announcement-mode")}
+          className="border text-black px-3 py-3 rounded hover:bg-black hover:text-white transition"
+        >
+          📢 Generate Quaterly Programmes
+        </button>
+      </div>
     </div>
   );
 }

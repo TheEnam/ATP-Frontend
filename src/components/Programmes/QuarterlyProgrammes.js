@@ -54,12 +54,9 @@ export default function QuarterlyProgrammes() {
   };
 
   return (
-    <div className="p-8 bg-[#f2f4ff] min-h-screen">
-      <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-        <h1 className="text-3xl font-bold text-center flex-grow text-[#1d1c4f]">
-          {quarter} Programmes Overview
-        </h1>
-        <div className="flex items-center gap-4">
+    <div className="p-8 bg-[#f2f9ff] min-h-screen">
+      <div className="flex flex-col md:flex-row items-center mb-6 gap-4">
+        <div className="flex flex-row justify-between items-center gap-4">
           <select
             value={quarter}
             onChange={(e) => setQuarter(e.target.value)}
@@ -79,7 +76,11 @@ export default function QuarterlyProgrammes() {
         </div>
       </div>
 
-      <div ref={printRef} className="space-y-10">
+      <div ref={printRef} className="space-y-5">
+        <h1 className="text-3xl font-bold text-center flex-grow text-[#1d1c4f]">
+          {quarter} Programmes Overview
+        </h1>
+
         {monthsByQuarter[quarter].map((month) => (
           <div key={month}>
             <h2 className="text-2xl font-bold mb-4 text-[#1d1c4f]">{month}</h2>

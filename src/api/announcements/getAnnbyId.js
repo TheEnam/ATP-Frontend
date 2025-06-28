@@ -7,7 +7,7 @@ export const getAnnbyId = async (id) => {
     }
 
    
-    const response = await axios.get(`/announcement/${id}`);
+    const response = await axios.get(`/announcements/${id}`);
     return response.data;
     // } catch (error) {
     //     console.error("Error fetching announcement by ID:", error);

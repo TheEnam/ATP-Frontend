@@ -32,7 +32,7 @@ const groupAndFilterAnnouncements = (announcements) => {
   announcements.forEach((ann) => {
     if (!isThisWeek(ann.dateofAnnouncement) && !ann.is_recurring) return;
 
-    if (["Conference", "Zonal"].includes(ann.typeOfAnnouncement)) {
+    if (ann.typeOfAnnouncement === "Conference") {
       grouped.Conference.push(ann);
     } else if (ann.typeOfAnnouncement === "District") {
       grouped.District.push(ann);

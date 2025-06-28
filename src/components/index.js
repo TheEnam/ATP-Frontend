@@ -28,3 +28,4 @@ export {default as Home} from './General/Home';
 // Programme
 export { default as Programmes } from './Programmes/Programmes';
 export { default as CreateProgramme } from './Programmes/CreateProgramme';
+export {default as QuarterlyProgrammes} from './Programmes/QuarterlyProgrammes';

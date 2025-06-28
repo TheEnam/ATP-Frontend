@@ -11,7 +11,7 @@ export const getThanksgivings = async (filters = {}) => {
     if (filters.endDate) params.append("endDate", filters.endDate);
     if (filters.name) params.append("name", filters.name);
   
-    const response = await axiosInstance.get(`/thanksgiving?${params.toString()}`,{
+    const response = await axiosInstance.get(`/thanksgivings?${params.toString()}`,{
         headers: {
             Authorization: `Bearer ${token}`,
         },

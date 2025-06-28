@@ -7,11 +7,11 @@ export const addThanks = async (data) => {
   //   throw new Error("No token found. Please log in.");
   // }
 
-  return await axiosInstance.post("/thanksgiving", 
+  return await axiosInstance.post("/thanksgivings", 
     {
       memberName: data.name.trim(),
-      amount: Number(data.amount),
       message: data.purpose.trim(),
+      amount: Number(data.amount),
       dateOfThanksgiving: new Date(data.date).toISOString(),
     }
   );

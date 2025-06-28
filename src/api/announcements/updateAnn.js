@@ -16,6 +16,6 @@ export const updateAnn = async (id, data) => {
 
   console.log("Updating with payload:", payload);
 
-  return axiosInstance.put(`/announcement/${id}`, payload);
+  return axiosInstance.put(`/announcements/${id}`, payload);
 };
 

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "https://atp-frontend.onrender.com",
-  "proxy": "https://atp-apis.onrender.com",
+  "proxy": "https://atp-backend-4578.onrender.com",
   "dependencies": {
     "@tailwindcss/cli": "^4.0.15",
     "@testing-library/dom": "^10.4.0",
@@ -13,12 +13,14 @@
     "axios": "^1.8.4",
     "cors": "^2.8.5",
     "css": "^3.0.0",
+    "downloadjs": "^1.4.7",
+    "html-to-image": "^1.11.13",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.4.0",
-    "react-scripts": "5.0.1",
-    "tailwind": "^4.0.0",
+    "react-scripts": "^5.0.1",
+    "tailwind": "^2.3.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

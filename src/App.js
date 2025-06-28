@@ -18,7 +18,8 @@ import {
   EmailVerify,
   ForgotPassword,
   ResetPassword,
-  VerifyEmail
+  VerifyEmail,
+  QuarterlyProgrammes
 } from "./components";
 
 
@@ -136,6 +137,14 @@ function App() {
               </AppLayout>
             }
           />
+          <Route 
+            path="/quarterly-programmes"
+            element={
+              <AppLayout>
+                <QuarterlyProgrammes
+                />
+              </AppLayout>
+            } />
         </Routes>
       </Router>
     </div>

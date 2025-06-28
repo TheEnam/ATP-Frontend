@@ -8,12 +8,14 @@ import { useNavigate } from "react-router-dom";
 import { HiOutlineUserGroup } from "react-icons/hi";
 import { getAnn } from "../../api/announcements/getAnn";
 import { getThanksgivings } from "../../api/thanksgiving/seeThanks";
+import { getAllProgrammes } from "../../api/programmes/getProg";
 // import { getTransfers } from "../../api/transfers/getTransfers";
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [announcements, setAnnouncements] = useState([]);
   const [thanksgivings, setThanksgivings] = useState([]);
+  const [programmes, setProgrammes] = useState([]);
   const [transfers, setTransfers] = useState([]);
   const [error, setError] = useState(null);
 
@@ -24,10 +26,11 @@ export default function Dashboard() {
       try {
         const annData = await getAnn();
         const thanksData = await getThanksgivings();
+        const progData = await getAllProgrammes();
 
-        // Ensure array fallback to prevent `.filter` crash
         setAnnouncements(Array.isArray(annData) ? annData : []);
         setThanksgivings(Array.isArray(thanksData) ? thanksData : []);
+        setProgrammes(Array.isArray(progData) ? progData : []);
       } catch (err) {
         setError("Failed to fetch data");
       }
@@ -35,14 +38,6 @@ export default function Dashboard() {
 
     fetchData();
   }, []);
-
-  const [programmes, setProgrammes] = useState([
-    { title: "Youth Summit", department: "Youth", date: "2025-05-25" },
-    { title: "Women's Conference", department: "Women's Ministry", date: "2025-07-27" },
-    { title: "Health Week", department: "Health Ministry", date: "2025-08-31"},
-    { title: "Men's Week of Prayer", department: "Men's Ministry", date: "2025-06-10" },
-    { title: "Family Retreat", department: "Family Life", date: "2025-06-27" },
-  ]);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);

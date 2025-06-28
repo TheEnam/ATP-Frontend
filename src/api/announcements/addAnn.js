@@ -9,7 +9,7 @@ export const addAnn = async (data) => {
     
   
 
-    return await axios.post("/announcement", 
+    return await axios.post("/announcements", 
         {
         title: data.title.trim(),
         description: data.description.trim(),

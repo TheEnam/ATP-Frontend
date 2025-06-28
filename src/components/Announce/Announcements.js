@@ -98,7 +98,7 @@ export default function Announcements() {
           <option value="">All Types</option>
           <option value="Local">Local</option>
           <option value="District">District</option>
-          <option value="Zonal">Conference</option>
+          <option value="Conference">Conference</option>
         </select>
 
 
@@ -179,7 +179,7 @@ export default function Announcements() {
                       }>
                       <option value="Local">Local</option>
                       <option value="District">District</option>
-                      <option value="Zonal">Conference</option>
+                      <option value="Conference">Conference</option>
                     </select>
 
                     <label className="block mb-2 font-semibold">Description</label>

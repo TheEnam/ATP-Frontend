@@ -55,8 +55,8 @@ export default function QuarterlyProgrammes() {
 
   return (
     <div className="p-8 bg-[#f2f9ff] min-h-screen">
-      <div className="flex flex-col md:flex-row items-center mb-6 gap-4">
-        <div className="flex flex-row justify-between items-center gap-4">
+      <div className="flex flex-col md:flex-row items-center mb-6 gap-6">
+        <div className="flex flex-row justify-between items-center gap-6">
           <select
             value={quarter}
             onChange={(e) => setQuarter(e.target.value)}
@@ -76,7 +76,7 @@ export default function QuarterlyProgrammes() {
         </div>
       </div>
 
-      <div ref={printRef} className="space-y-5">
+      <div ref={printRef} className="space-y-7 p-8">
         <h1 className="text-3xl font-bold text-center flex-grow text-[#1d1c4f]">
           {quarter} Programmes Overview
         </h1>
@@ -94,7 +94,7 @@ export default function QuarterlyProgrammes() {
                   <div
                     key={weekNumber}
                     className={`rounded-xl shadow-md p-5 text-white ${
-                      weekNumber % 2 === 0 ? "bg-[#5c48d3]" : "bg-[#e8e9fc] text-[#1d1c4f]"
+                      weekNumber % 2 === 0 ? "bg-[#5c48d3]" : "bg-[#4fc5fc] text-[#1d1c4f]"
                     }`}
                   >
                     <p className="text-sm uppercase tracking-wider mb-1">
@@ -103,6 +103,9 @@ export default function QuarterlyProgrammes() {
 
                     {found ? (
                       <>
+                        <p className="font-semibold">
+                          Program:  {found.title}
+                        </p>
                         <h3 className="text-lg font-bold mb-1">{found.name}</h3>
                         <p className="text-sm">{found.department}</p>
                         <p className="text-sm">{new Date(found.date).toLocaleDateString()}</p>

@@ -76,10 +76,8 @@ function App() {
           <Route
             path="/announcement-mode"
             element={
-              <AppLayout>
                 <AnnouncementMode />
-              </AppLayout>
-            }
+              }
           />
           <Route
             path="/add-thanksgiving"

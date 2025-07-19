@@ -1,7 +1,8 @@
 import React from "react";
 import { TiInfinityOutline } from "react-icons/ti";
 import { LiaGripLinesSolid } from "react-icons/lia";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+
 
 // Styled section component reused for each local group
 const StyledGroupSection = ({ title, announcements }) => {

@@ -3,6 +3,7 @@ import { getAnn } from "../../api/announcements/getAnn";
 import { useNavigate } from "react-router-dom";
 import { TiInfinityOutline } from "react-icons/ti";
 import { LiaGripLinesSolid } from "react-icons/lia";
+import DraggableLocalSection from "./DraggableLocalSection";
 
 const groupAndFilterAnnouncements = (announcements) => {
   const now = new Date();
@@ -12,11 +13,13 @@ const groupAndFilterAnnouncements = (announcements) => {
   const endOfWeek = new Date(startOfWeek);
   endOfWeek.setDate(startOfWeek.getDate() + 7);
 
+  
+  
   const isThisWeek = (dateStr) => {
     const date = new Date(dateStr);
     return date >= startOfWeek && date <= endOfWeek;
   };
-
+  
   const grouped = {
     Conference: [],
     District: [],
@@ -29,9 +32,10 @@ const groupAndFilterAnnouncements = (announcements) => {
     },
   };
 
+  
   announcements.forEach((ann) => {
     if (!isThisWeek(ann.dateofAnnouncement) && !ann.is_recurring) return;
-
+    
     if (ann.typeOfAnnouncement === "Conference") {
       grouped.Conference.push(ann);
     } else if (ann.typeOfAnnouncement === "District") {
@@ -41,7 +45,7 @@ const groupAndFilterAnnouncements = (announcements) => {
     } else if (ann.typeOfAnnouncement === "Transfer") {
       const reading = ann.reading?.toLowerCase();
       const direction = ann.direction?.toLowerCase(); // "in" or "out"
-
+      
       if (reading === "first") {
         grouped.Transfers[`firstReading${direction === "in" ? "In" : "Out"}`].push(ann);
       } else if (reading === "second") {
@@ -49,6 +53,29 @@ const groupAndFilterAnnouncements = (announcements) => {
       }
     }
   });
+  
+  const desiredLocalOrder = ["Keep Fit", "Bible Studies", "Midweek", "Afternoon Program", "Upcoming Programmes","Meetings", "Funeral", "Thanksgiving", ""];
+  
+  const localGrouped = {};
+
+  desiredLocalOrder.forEach((category) => {
+    localGrouped[category] = [];
+  });
+
+  grouped.Local.forEach((ann) => {
+    const match = desiredLocalOrder.find((category) =>
+      ann.title?.toLowerCase().includes(category.toLowerCase())
+    );
+    if (match) {
+      localGrouped[match].push(ann);
+    } else {
+      // Put unmatched ones under "Others" or something optional
+      localGrouped["Others"] = localGrouped["Others"] || [];
+      localGrouped["Others"].push(ann);
+    }
+  });
+
+  grouped.Local = localGrouped;
 
   return grouped;
 };
@@ -128,7 +155,7 @@ export default function AnnouncementMode() {
       <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow space-y-10">
         <Section title="Conference" items={groupedAnnouncements.Conference} />
         <Section title="District" items={groupedAnnouncements.District} />
-        <Section title="Local" items={groupedAnnouncements.Local} />
+        <DraggableLocalSection title="Local" localData={groupedAnnouncements.Local} />
 
         <div className="space-y-6">
           <h2 className="text-2xl text-center font-bold text-gray-800 underline decoration-2 underline-offset-4 mb-4">
@@ -140,12 +167,6 @@ export default function AnnouncementMode() {
           <Section title="Second Reading - Transfer Out" items={groupedAnnouncements.Transfers.secondReadingOut} />
         </div>
       </div>
-      <h2 className="text-2xl text-center font-bold text-gray-800 mt-10 mb-4">
-        Additional Information
-      </h2>
-      <p className="text-center text-gray-600 mb-6">
-        For more details or to submit an announcement, please contact the secretariat.
-      </p>
 
       <div className="flex justify-center mt-10">
         <button

@@ -20,7 +20,7 @@ export default function AddAnn() {
   }));
   };
 
-  const announcementTitles = ["Keep Fit", "Bible Studies", "Midweek", "Afternoon Program", "Upcoming Programmes","Meetings", "Funeral", "Thanksgiving", ""];
+  const announcementTitles = ["Keep Fit", "Bible Studies", "Midweek", "Afternoon Program", "Upcoming Programmes","Meetings", "Funeral", "Thanksgiving", "Others"];
 
   const handleSubmit = async (e) => {
     e.preventDefault();

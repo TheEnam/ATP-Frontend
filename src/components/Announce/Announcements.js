@@ -22,6 +22,8 @@ export default function Announcements() {
     setEditMode(false);
   };
 
+  const announcementTitles = ["Keep Fit", "Bible Studies", "Midweek", "Afternoon Program", "Upcoming Programmes","Meetings", "Funeral", "Thanksgiving", ""];
+
     // Fetch announcements function
   const fetchAnnouncements = useCallback(async () => {
     setLoading(true);
@@ -162,13 +164,19 @@ export default function Announcements() {
                 {editMode ? (
                   <>
                   <label className="block mb-2 font-semibold">Title</label>
-                    <input
-                      className="w-full p-2 border rounded mb-2"
+                    <select
                       value={selectedAnnouncement.title}
+                      className="w-full p-2 border rounded mb-2"
                       onChange={(e) =>
                         setSelectedAnnouncement({ ...selectedAnnouncement, title: e.target.value })
                       }
-                    />
+                    >
+                      {announcementTitles.map((title) => (
+                        <option key={title} value={title}>
+                          {title}
+                        </option>
+                      ))}
+                    </select>
 
                     <label className="block mb-2 font-semibold">Type of Announcement</label>
                     <select

@@ -20,6 +20,8 @@ export default function AddAnn() {
   }));
   };
 
+  const announcementTitles = ["Keep Fit", "Bible Studies", "Midweek", "Afternoon Program", "Upcoming Programmes","Meetings", "Funeral", "Thanksgiving", ""];
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -45,15 +47,20 @@ export default function AddAnn() {
           Add New Announcement
         </h2>
         <form id="add-announcement" onSubmit={handleSubmit}>
-          <label className="block text-gray-700 font-medium">Title</label>
-          <input
-            type="text"
+          <label className="block text-gray-700 font-medium">Title</label>      
+          <select
             name="title"
             value={formData.title}
             onChange={handleChange}
             className="w-full p-2 mt-1 border rounded"
             required
-          />
+          >
+            {announcementTitles.map((title) => (
+              <option key={title} value={title}>
+                {title}
+              </option>
+            ))}
+          </select>
 
           <label className="block text-gray-700 font-medium mt-3">Description</label>
           <textarea

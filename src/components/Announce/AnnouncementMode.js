@@ -148,9 +148,19 @@ export default function AnnouncementMode() {
 
   if (loading) return <p className="text-center justify-center min-w-screen min-h-screen mt-10 bg-white">Loading announcements...</p>;
 
+  // Get today's date in a readable format
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <h1 className="text-3xl font-bold text-center mb-8">This Week's Announcements</h1>
+      <h1 className="text-3xl font-bold text-center mb-8">
+        Announcements  - {formattedDate}
+      </h1>
 
       <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow space-y-10">
         <Section title="Conference" items={groupedAnnouncements.Conference} />

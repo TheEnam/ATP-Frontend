@@ -13,6 +13,7 @@ export default function AddAnn() {
   });
 
   const handleChange = (e) => {
+    e.preventDefault();
     const { name, value, type, checked } = e.target;
      setFormData((prev) => ({
     ...prev,

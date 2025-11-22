@@ -166,7 +166,7 @@ export default function AnnouncementMode() {
         <Section title="Conference" items={groupedAnnouncements.Conference} />
         <Section title="District" items={groupedAnnouncements.District} />
         <DraggableLocalSection title="Local" localData={groupedAnnouncements.Local} />
-
+{/* 
         <div className="space-y-6">
           <h2 className="text-2xl text-center font-bold text-gray-800 underline decoration-2 underline-offset-4 mb-4">
             Transfers
@@ -175,7 +175,7 @@ export default function AnnouncementMode() {
           <Section title="First Reading - Transfer Out" items={groupedAnnouncements.Transfers.firstReadingOut} />
           <Section title="Second Reading - Transfer In" items={groupedAnnouncements.Transfers.secondReadingIn} />
           <Section title="Second Reading - Transfer Out" items={groupedAnnouncements.Transfers.secondReadingOut} />
-        </div>
+        </div> */}
       </div>
 
       <div className="flex justify-center mt-10">

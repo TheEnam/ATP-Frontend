@@ -22,7 +22,7 @@ export default function Announcements() {
     setEditMode(false);
   };
 
-  const announcementTitles = ["Keep Fit", "Bible Studies", "Midweek", "Afternoon Program", "Upcoming Programmes","Meetings", "Funeral", "Thanksgiving", "Others"];
+  const announcementTitles = ["Keep Fit", "Bible Studies", "Midweek", "Afternoon Program", "Upcoming Programmes","Meetings", "Funeral", "Thanksgiving","Transfers", "Others"];
 
     // Fetch announcements function
   const fetchAnnouncements = useCallback(async () => {

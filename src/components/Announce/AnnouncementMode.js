@@ -144,7 +144,7 @@ export default function AnnouncementMode() {
     };
 
     fetchData();
-  }, []);
+  }, [groupedAnnouncements]);
 
   if (loading) return <p className="text-center justify-center min-w-screen min-h-screen mt-10 bg-white">Loading announcements...</p>;
 

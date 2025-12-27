@@ -62,9 +62,6 @@ export default function Announcements() {
     }
   };
 
-  useEffect(() => {
-    fetchAnnouncements();
-  }, [fetchAnnouncements]);
 
   const handleFilterChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });

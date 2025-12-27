@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { TiInfinityOutline } from "react-icons/ti";
 import { LiaGripLinesSolid } from "react-icons/lia";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 // Helper to reorder array
 const reorder = (list, startIndex, endIndex) => {

@@ -19,7 +19,7 @@ export default function Sidebar() {
     };
 
     return (
-      <div className="bg-gray-100 p-4 min-h-screen w-1/6 flex flex-col justify-between">
+      <div className="bg-gray-100 p-4 min-h-screen sm:w-1/6 sm:flex flex-col justify-between">
         {/* Top Section */}
         <div>
           <Link to="/dashboard" className="flex flex-row items-center space-x-3 mb-7">

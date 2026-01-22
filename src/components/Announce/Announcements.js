@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { getAnn } from "../../api/announcements/getAnn";
-import { getAnnbyId } from "../../api/announcements/getAnnbyId";
 import { delAnn } from "../../api/announcements/delAnn";
 import { updateAnn } from "../../api/announcements/updateAnn";
 
@@ -127,9 +126,7 @@ export default function Announcements() {
                   key={item._id}
                   className="border-t cursor-pointer hover:bg-gray-100 transition"
                   onClick={() =>
-                    getAnnbyId(item._id)
-                      .then((data) => setSelectedAnnouncement(data))
-                      .catch((err) => console.error("Error getting details:", err))
+                   setSelectedAnnouncement({ ...item })
                   }
                 >
                   <td className="p-3">{item.title}</td>

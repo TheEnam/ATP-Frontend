@@ -38,7 +38,6 @@ function App() {
       <Router>
         <Routes>
           {/* Routes WITHOUT sidebar */}
-          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/verify-email" element={<VerifyEmail email=" " />} />
@@ -49,6 +48,13 @@ function App() {
 
 
           {/* Routes WITH sidebar */}
+          <Route 
+            path="/" 
+            element={
+            <AppLayout>
+              <Dashboard />
+            </AppLayout>
+            } />
           <Route
             path="/dashboard"
             element={

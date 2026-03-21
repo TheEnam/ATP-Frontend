@@ -55,7 +55,7 @@ const groupAndFilterAnnouncements = (announcements) => {
     }
   });
   
-  const desiredLocalOrder = ["Afternoon Program","Keep Fit","Bible Studies","Midweek","Upcoming Programmes","Meetings","Funeral","Thanksgiving","Transfers", ""];
+  const desiredLocalOrder = ["Afternoon Program","Keep Fit","Bible Studies","Midweek","Upcoming Programmes","Meetings","Funeral","Thanksgiving","","Transfers"];
   
   const localGrouped = {};
 

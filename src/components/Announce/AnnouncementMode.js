@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { TiInfinityOutline } from "react-icons/ti";
 import { LiaGripLinesSolid } from "react-icons/lia";
 import DraggableLocalSection from "./DraggableLocalSection";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 const groupAndFilterAnnouncements = (announcements) => {
   const now = new Date();
@@ -54,7 +55,7 @@ const groupAndFilterAnnouncements = (announcements) => {
     }
   });
   
-  const desiredLocalOrder = ["Afternoon Program","Keep Fit","Bible Studies","Midweek","Upcoming Programmes","Meetings","Funeral","Thanksgiving","Transfers", ""];
+  const desiredLocalOrder = ["Afternoon Program","Keep Fit","Bible Studies","Midweek","Upcoming Programmes","Meetings","Funeral","Thanksgiving","","Transfers"];
   
   const localGrouped = {};
 
@@ -124,58 +125,115 @@ const Section = ({ title, items }) => {
   );
 };
 
-
+const DEFAULT_SECTIONS = ["Conference", "District", "Local", "Transfers"];
+const SECTION_ORDER_KEY = "announcementSectionOrder";
 export default function AnnouncementMode() {
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+
+useEffect(() => {
+  const goOffline = () => setIsOffline(true);
+  const goOnline  = () => setIsOffline(false);
+  window.addEventListener("offline", goOffline);
+  window.addEventListener("online",  goOnline);
+  return () => {
+    window.removeEventListener("offline", goOffline);
+    window.removeEventListener("online",  goOnline);
+  };
+}, []);
+
+  
   const [groupedAnnouncements, setGroupedAnnouncements] = useState(null);
+  const [sectionOrder, setSectionOrder] = useState(() => {
+    try {
+      const stored = localStorage.getItem(SECTION_ORDER_KEY);
+      return stored ? JSON.parse(stored) : DEFAULT_SECTIONS;
+    } catch {
+      return DEFAULT_SECTIONS;
+    }
+  });
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const all = await getAnn(); // Fetch all announcements
-        const grouped = groupAndFilterAnnouncements(all);
-        setGroupedAnnouncements(grouped);
+        const all = await getAnn();
+        setGroupedAnnouncements(groupAndFilterAnnouncements(all));
       } catch (err) {
         console.error("Failed to load announcement mode:", err);
       } finally {
         setLoading(false);
       }
     };
-
     fetchData();
-  }, [groupedAnnouncements]);
+  }, []);
 
-  if (loading) return <p className="text-center justify-center min-w-screen min-h-screen mt-10 bg-white">Loading announcements...</p>;
+  const handleSectionDragEnd = (result) => {
+    const { source, destination } = result;
+    if (!destination || source.index === destination.index) return;
 
-  // Get today's date in a readable format
-  const today = new Date();
-  const formattedDate = today.toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
+    const newOrder = Array.from(sectionOrder);
+    const [moved] = newOrder.splice(source.index, 1);
+    newOrder.splice(destination.index, 0, moved);
+
+    setSectionOrder(newOrder);
+    localStorage.setItem(SECTION_ORDER_KEY, JSON.stringify(newOrder));
+  };
+
+  if (loading) return <p className="text-center mt-10">Loading announcements...</p>;
+
+  const today = new Date().toLocaleDateString(undefined, {
+    year: "numeric", month: "long", day: "numeric",
   });
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <h1 className="text-3xl font-bold text-center mb-8">
-        Announcements  - {formattedDate}
+        Announcements — {today}
       </h1>
 
-      <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow space-y-10">
-        <Section title="Conference" items={groupedAnnouncements.Conference} />
-        <Section title="District" items={groupedAnnouncements.District} />
-        <DraggableLocalSection title="Local" localData={groupedAnnouncements.Local} />
-{/* 
-        <div className="space-y-6">
-          <h2 className="text-2xl text-center font-bold text-gray-800 underline decoration-2 underline-offset-4 mb-4">
-            Transfers
-          </h2>
-          <Section title="First Reading - Transfer In" items={groupedAnnouncements.Transfers.firstReadingIn} />
-          <Section title="First Reading - Transfer Out" items={groupedAnnouncements.Transfers.firstReadingOut} />
-          <Section title="Second Reading - Transfer In" items={groupedAnnouncements.Transfers.secondReadingIn} />
-          <Section title="Second Reading - Transfer Out" items={groupedAnnouncements.Transfers.secondReadingOut} />
-        </div> */}
+      {isOffline && (
+        <div className="text-center text-sm bg-yellow-100 text-yellow-800 py-2 px-4 rounded mb-4">
+          You are offline — showing last saved announcements
+        </div>
+      )}
+
+      <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow">
+        <DragDropContext onDragEnd={handleSectionDragEnd}>
+          <Droppable droppableId="sections">
+            {(provided) => (
+              <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-10">
+                {sectionOrder.map((sectionName, index) => (
+                  <Draggable key={sectionName} draggableId={sectionName} index={index}>
+                    {(provided) => (
+                      <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                        {sectionName === "Local" ? (
+                          <DraggableLocalSection localData={groupedAnnouncements.Local} />
+                        ) : sectionName === "Transfers" ? (
+                          <Section
+                            title="Transfers"
+                            items={[
+                              ...groupedAnnouncements.Transfers.firstReadingIn,
+                              ...groupedAnnouncements.Transfers.firstReadingOut,
+                              ...groupedAnnouncements.Transfers.secondReadingIn,
+                              ...groupedAnnouncements.Transfers.secondReadingOut,
+                            ]}
+                          />
+                        ) : (
+                          <Section
+                            title={sectionName}
+                            items={groupedAnnouncements[sectionName]}
+                          />
+                        )}
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
 
       <div className="flex justify-center mt-10">

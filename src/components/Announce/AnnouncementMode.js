@@ -215,7 +215,14 @@ useEffect(() => {
 
   
   const [groupedAnnouncements, setGroupedAnnouncements] = useState(EMPTY_GROUPED_ANNOUNCEMENTS);
-  const [sectionOrder, setSectionOrder] = useState(DEFAULT_SECTIONS);
+  const [sectionOrder, setSectionOrder] = useState(() => {
+    try {
+      const stored = localStorage.getItem("sectionOrder");
+      return stored ? JSON.parse(stored) : DEFAULT_SECTIONS;
+    } catch {
+      return DEFAULT_SECTIONS;
+    }
+  });
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -259,21 +266,12 @@ useEffect(() => {
   }, [loadAnnouncements]);
 
   useEffect(() => {
-    let isMounted = true;
-
-    const loadSectionOrder = async () => {
-      try {
-        const order = await getDisplayOrder();
-        if (isMounted && order.sections) setSectionOrder(order.sections);
-      } catch (err) {
-        console.error("Failed to load display order:", err);
+    getDisplayOrder().then((order) => {
+      if (order.sections) {
+        setSectionOrder(order.sections);
+        localStorage.setItem("sectionOrder", JSON.stringify(order.sections));
       }
-    };
-
-    loadSectionOrder();
-    return () => {
-      isMounted = false;
-    };
+    }).catch(() => {}); // localStorage fallback already set in useState
   }, []);
 
   const handleSectionDragEnd = (result) => {
@@ -285,6 +283,7 @@ useEffect(() => {
     newOrder.splice(destination.index, 0, moved);
 
     setSectionOrder(newOrder);
+    localStorage.setItem("sectionOrder", JSON.stringify(newOrder));
     saveDisplayOrder({ sections: newOrder });
   };
 

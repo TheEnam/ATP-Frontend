@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { TiInfinityOutline } from "react-icons/ti";
 import { LiaGripLinesSolid } from "react-icons/lia";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { getDisplayOrder, saveDisplayOrder } from "../../api/displayOrder";
 
 const ITEM_ORDER_KEY = "reorderedLocalAnnouncements";
-const CATEGORY_ORDER_KEY = "localCategoryOrder";
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -66,14 +66,7 @@ const StyledGroupSection = ({ title, announcements, dragHandleProps }) => (
 
 const DraggableLocalSection = ({ localData }) => {
   const [orderedItems, setOrderedItems] = useState(localData);
-  const [categoryOrder, setCategoryOrder] = useState(() => {
-    try {
-      const stored = localStorage.getItem(CATEGORY_ORDER_KEY);
-      return stored ? JSON.parse(stored) : Object.keys(localData);
-    } catch {
-      return Object.keys(localData);
-    }
-  });
+  const [categoryOrder, setCategoryOrder] = useState(Object.keys(localData));
 
   // Sync item order from localStorage
   useEffect(() => {
@@ -98,24 +91,17 @@ const DraggableLocalSection = ({ localData }) => {
     }
   }, [localData]);
 
-  // Sync category order — merge in any new categories not yet in saved order
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(CATEGORY_ORDER_KEY);
-      const savedOrder = stored ? JSON.parse(stored) : null;
-      if (savedOrder) {
+    getDisplayOrder().then((order) => {
+      if (order.localCategories) {
         const allKeys = Object.keys(localData);
         const merged = [
-          ...savedOrder.filter(k => allKeys.includes(k)),
-          ...allKeys.filter(k => !savedOrder.includes(k)),
+          ...order.localCategories.filter((k) => allKeys.includes(k)),
+          ...allKeys.filter((k) => !order.localCategories.includes(k)),
         ];
         setCategoryOrder(merged);
-      } else {
-        setCategoryOrder(Object.keys(localData));
       }
-    } catch {
-      setCategoryOrder(Object.keys(localData));
-    }
+    });
   }, [localData]);
 
   const handleDragEnd = (result) => {
@@ -127,7 +113,7 @@ const DraggableLocalSection = ({ localData }) => {
       if (source.index === destination.index) return;
       const newOrder = reorder(categoryOrder, source.index, destination.index);
       setCategoryOrder(newOrder);
-      localStorage.setItem(CATEGORY_ORDER_KEY, JSON.stringify(newOrder));
+      saveDisplayOrder({ localCategories: newOrder });
       return;
     }
 

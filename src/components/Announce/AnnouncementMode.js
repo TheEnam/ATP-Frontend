@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getAnn } from "../../api/announcements/getAnn";
+import { getDisplayOrder, saveDisplayOrder } from "../../api/displayOrder";
 import { useNavigate } from "react-router-dom";
 import { TiInfinityOutline } from "react-icons/ti";
 import { LiaGripLinesSolid } from "react-icons/lia";
@@ -35,7 +36,8 @@ const groupAndFilterAnnouncements = (announcements) => {
 
   
   announcements.forEach((ann) => {
-    if (!isThisWeek(ann.dateofAnnouncement) && !ann.is_recurring) return;
+    const announcementDate = ann.dateOfAnnouncement || ann.dateofAnnouncement;
+    if (!isThisWeek(announcementDate) && !ann.is_recurring) return;
     
     if (ann.typeOfAnnouncement === "Conference") {
       grouped.Conference.push(ann);
@@ -186,7 +188,17 @@ const TransferSection = ({ transfers }) => {
 };
 
 const DEFAULT_SECTIONS = ["Conference", "District", "Local", "Transfers"];
-const SECTION_ORDER_KEY = "announcementSectionOrder";
+const EMPTY_GROUPED_ANNOUNCEMENTS = {
+  Conference: [],
+  District: [],
+  Local: {},
+  Transfers: {
+    firstReadingIn: [],
+    firstReadingOut: [],
+    secondReadingIn: [],
+    secondReadingOut: [],
+  },
+};
 export default function AnnouncementMode() {
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
@@ -202,30 +214,56 @@ useEffect(() => {
 }, []);
 
   
-  const [groupedAnnouncements, setGroupedAnnouncements] = useState(null);
-  const [sectionOrder, setSectionOrder] = useState(() => {
-    try {
-      const stored = localStorage.getItem(SECTION_ORDER_KEY);
-      return stored ? JSON.parse(stored) : DEFAULT_SECTIONS;
-    } catch {
-      return DEFAULT_SECTIONS;
-    }
-  });
+  const [groupedAnnouncements, setGroupedAnnouncements] = useState(EMPTY_GROUPED_ANNOUNCEMENTS);
+  const [sectionOrder, setSectionOrder] = useState(DEFAULT_SECTIONS);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
+    let isMounted = true;
+
+    const loadAnnouncements = async () => {
+      const all = await getAnn();
+      if (!isMounted) return;
+      setGroupedAnnouncements(groupAndFilterAnnouncements(all));
+    };
+
     const fetchData = async () => {
       try {
-        const all = await getAnn();
-        setGroupedAnnouncements(groupAndFilterAnnouncements(all));
+        await loadAnnouncements();
+
+        const order = await getDisplayOrder();
+        if (isMounted && order.sections) setSectionOrder(order.sections);
       } catch (err) {
-        console.error("Failed to load announcement mode:", err);
+        console.error("Failed to load:", err);
+        if (isMounted) setGroupedAnnouncements(EMPTY_GROUPED_ANNOUNCEMENTS);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
+
+    const refreshAnnouncements = () => {
+      loadAnnouncements().catch((err) => {
+        console.error("Failed to refresh announcements:", err);
+      });
+    };
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden) refreshAnnouncements();
+    };
+
     fetchData();
+
+    const intervalId = window.setInterval(refreshAnnouncements, 15000);
+    window.addEventListener("focus", refreshAnnouncements);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      isMounted = false;
+      window.clearInterval(intervalId);
+      window.removeEventListener("focus", refreshAnnouncements);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
 
   const handleSectionDragEnd = (result) => {
@@ -237,7 +275,7 @@ useEffect(() => {
     newOrder.splice(destination.index, 0, moved);
 
     setSectionOrder(newOrder);
-    localStorage.setItem(SECTION_ORDER_KEY, JSON.stringify(newOrder));
+    saveDisplayOrder({ sections: newOrder });
   };
 
   if (loading) return <p className="text-center mt-10">Loading announcements...</p>;
@@ -268,13 +306,13 @@ useEffect(() => {
                     {(provided) => (
                       <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                         {sectionName === "Local" ? (
-                          <DraggableLocalSection localData={groupedAnnouncements.Local} />
+                          <DraggableLocalSection localData={groupedAnnouncements.Local || {}} />
                         ) : sectionName === "Transfers" ? (
                           <TransferSection transfers={groupedAnnouncements.Transfers} />
                         ) : (
                           <Section
                             title={sectionName}
-                            items={groupedAnnouncements[sectionName]}
+                            items={groupedAnnouncements?.[sectionName] || []}
                           />
                         )}
                       </div>

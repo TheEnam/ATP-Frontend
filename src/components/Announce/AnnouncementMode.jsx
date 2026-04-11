@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getAnn } from "../../api/announcements/getAnn";
 import { getDisplayOrder, saveDisplayOrder } from "../../api/displayOrder";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,8 @@ import { TiInfinityOutline } from "react-icons/ti";
 import { LiaGripLinesSolid } from "react-icons/lia";
 import DraggableLocalSection from "./DraggableLocalSection";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import DraggableSection from "./DraggableSection";
+import DraggableTransferSection from "./DraggableTransferSection";
 
 const groupAndFilterAnnouncements = (announcements) => {
   const now = new Date();
@@ -202,17 +204,23 @@ const EMPTY_GROUPED_ANNOUNCEMENTS = {
 export default function AnnouncementMode() {
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
-useEffect(() => {
-  const goOffline = () => setIsOffline(true);
-  const goOnline  = () => setIsOffline(false);
-  window.addEventListener("offline", goOffline);
-  window.addEventListener("online",  goOnline);
-  return () => {
-    window.removeEventListener("offline", goOffline);
-    window.removeEventListener("online",  goOnline);
-  };
-}, []);
+  useEffect(() => {
+    const goOffline = () => setIsOffline(true);
+    const goOnline  = () => setIsOffline(false);
+    window.addEventListener("offline", goOffline);
+    window.addEventListener("online",  goOnline);
+    return () => {
+      window.removeEventListener("offline", goOffline);
+      window.removeEventListener("online",  goOnline);
+    };
+  }, []);
 
+  const [localCategories, setLocalCategories] = useState(() => {
+    try {
+      const stored = localStorage.getItem("localCategoryOrder");
+      return stored ? JSON.parse(stored) : [];
+    } catch { return []; }
+  });
   
   const [groupedAnnouncements, setGroupedAnnouncements] = useState(EMPTY_GROUPED_ANNOUNCEMENTS);
   const [sectionOrder, setSectionOrder] = useState(() => {
@@ -231,62 +239,74 @@ useEffect(() => {
     setGroupedAnnouncements(groupAndFilterAnnouncements(all));
   }, []);
 
+  const [itemOrders, setItemOrders] = useState({});
+
   useEffect(() => {
     let isMounted = true;
 
-    const refreshAnnouncements = () => {
-      loadAnnouncements().catch((err) => {
-        console.error("Failed to refresh announcements:", err);
-      });
-    };
-
-    const handleVisibilityChange = () => {
-      if (!document.hidden) refreshAnnouncements();
-    };
-
-    loadAnnouncements()
-      .catch((err) => {
-        console.error("Failed to load announcements:", err);
+    const fetchAll = async () => {
+      try {
+        const [all, order] = await Promise.all([getAnn(), getDisplayOrder()]);
+        if (!isMounted) return;
+        setGroupedAnnouncements(groupAndFilterAnnouncements(all));
+        if (order.localCategories) {
+          setLocalCategories(order.localCategories);
+          localStorage.setItem("localCategoryOrder", JSON.stringify(order.localCategories));
+        }
+        if (order.sections) {
+          setSectionOrder(order.sections);
+          localStorage.setItem("sectionOrder", JSON.stringify(order.sections));
+        }
+        if (order.itemOrders) setItemOrders(order.itemOrders);  
+      } catch (err) {
+        console.error("Failed to load:", err);
         if (isMounted) setGroupedAnnouncements(EMPTY_GROUPED_ANNOUNCEMENTS);
-      })
-      .finally(() => {
+      } finally {
         if (isMounted) setLoading(false);
-      });
-
-    const intervalId = window.setInterval(refreshAnnouncements, 15000);
-    window.addEventListener("focus", refreshAnnouncements);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      isMounted = false;
-      window.clearInterval(intervalId);
-      window.removeEventListener("focus", refreshAnnouncements);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [loadAnnouncements]);
-
-  useEffect(() => {
-    getDisplayOrder().then((order) => {
-      if (order.sections) {
-        setSectionOrder(order.sections);
-        localStorage.setItem("sectionOrder", JSON.stringify(order.sections));
       }
-    }).catch(() => {}); // localStorage fallback already set in useState
+    };
+
+    fetchAll();
+    return () => { isMounted = false; };
   }, []);
 
-  const handleSectionDragEnd = (result) => {
-    const { source, destination } = result;
-    if (!destination || source.index === destination.index) return;
-
-    const newOrder = Array.from(sectionOrder);
-    const [moved] = newOrder.splice(source.index, 1);
-    newOrder.splice(destination.index, 0, moved);
-
-    setSectionOrder(newOrder);
-    localStorage.setItem("sectionOrder", JSON.stringify(newOrder));
-    saveDisplayOrder({ sections: newOrder });
+  const reorder = (list, startIndex, endIndex) => {
+    const result = Array.from(list);
+    const [moved] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, moved);
+    return result;
   };
 
+  const handleSectionDragEnd = (result) => {
+    const { source, destination, type } = result;
+    if (!destination) return;
+
+    // Top-level section reorder
+    if (type === "DROPPABLE") {
+      if (source.index === destination.index) return;
+      const newOrder = Array.from(sectionOrder);
+      const [moved] = newOrder.splice(source.index, 1);
+      newOrder.splice(destination.index, 0, moved);
+      setSectionOrder(newOrder);
+      localStorage.setItem("sectionOrder", JSON.stringify(newOrder));
+      saveDisplayOrder({ sections: newOrder });
+      return;
+    }
+
+    // Item reorder within Conference or District
+    if (source.droppableId === destination.droppableId) {
+      const sectionName = source.droppableId; // e.g. "Conference"
+      const currentItems = groupedAnnouncements[sectionName];
+      if (!currentItems) return;
+
+      const reordered = reorder(currentItems, source.index, destination.index);
+      setGroupedAnnouncements(prev => ({ ...prev, [sectionName]: reordered }));
+
+      const newItemIds = reordered.map((item) => item._id);
+      setItemOrders(prev => ({ ...prev, [sectionName]: newItemIds }));
+      saveDisplayOrder({ itemOrders: { [sectionName]: newItemIds } });
+    }
+  };
   if (loading) return <p className="text-center mt-10">Loading announcements...</p>;
 
   const today = new Date().toLocaleDateString(undefined, {
@@ -307,7 +327,7 @@ useEffect(() => {
 
       <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow">
         <DragDropContext onDragEnd={handleSectionDragEnd}>
-          <Droppable droppableId="sections">
+          <Droppable droppableId="sections" type="DROPPABLE">
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-10">
                 {sectionOrder.map((sectionName, index) => (
@@ -315,11 +335,26 @@ useEffect(() => {
                     {(provided) => (
                       <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                         {sectionName === "Local" ? (
-                          <DraggableLocalSection localData={groupedAnnouncements.Local || {}} />
+                          <DraggableLocalSection
+                            localData={groupedAnnouncements.Local || {}}
+                            itemOrders={itemOrders}
+                            localCategories={localCategories}
+                            onItemOrderChange={(key, ids) => {
+                              setItemOrders(prev => ({ ...prev, [key]: ids }));
+                              saveDisplayOrder({ itemOrders: { [key]: ids } });
+                            }}
+                          />
                         ) : sectionName === "Transfers" ? (
-                          <TransferSection transfers={groupedAnnouncements.Transfers} />
-                        ) : (
-                          <Section
+                          <DraggableTransferSection
+                            transfers={groupedAnnouncements.Transfers}
+                            itemOrders={itemOrders}
+                            onItemOrderChange={(key, ids) => {
+                              setItemOrders((prev) => ({ ...prev, [key]: ids }));
+                              saveDisplayOrder({ itemOrders: { [key]: ids } });
+                            }}
+                          />
+                        ): (
+                          <DraggableSection
                             title={sectionName}
                             items={groupedAnnouncements?.[sectionName] || []}
                           />

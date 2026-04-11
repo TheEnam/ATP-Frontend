@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { getAnn } from "../../api/announcements/getAnn";
 import { getDisplayOrder, saveDisplayOrder } from "../../api/displayOrder";
 import { useNavigate } from "react-router-dom";
@@ -219,28 +219,13 @@ useEffect(() => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  const loadAnnouncements = useCallback(async () => {
+    const all = await getAnn();
+    setGroupedAnnouncements(groupAndFilterAnnouncements(all));
+  }, []);
+
   useEffect(() => {
     let isMounted = true;
-
-    const loadAnnouncements = async () => {
-      const all = await getAnn();
-      if (!isMounted) return;
-      setGroupedAnnouncements(groupAndFilterAnnouncements(all));
-    };
-
-    const fetchData = async () => {
-      try {
-        await loadAnnouncements();
-
-        const order = await getDisplayOrder();
-        if (isMounted && order.sections) setSectionOrder(order.sections);
-      } catch (err) {
-        console.error("Failed to load:", err);
-        if (isMounted) setGroupedAnnouncements(EMPTY_GROUPED_ANNOUNCEMENTS);
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
 
     const refreshAnnouncements = () => {
       loadAnnouncements().catch((err) => {
@@ -252,7 +237,14 @@ useEffect(() => {
       if (!document.hidden) refreshAnnouncements();
     };
 
-    fetchData();
+    loadAnnouncements()
+      .catch((err) => {
+        console.error("Failed to load announcements:", err);
+        if (isMounted) setGroupedAnnouncements(EMPTY_GROUPED_ANNOUNCEMENTS);
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
 
     const intervalId = window.setInterval(refreshAnnouncements, 15000);
     window.addEventListener("focus", refreshAnnouncements);
@@ -263,6 +255,24 @@ useEffect(() => {
       window.clearInterval(intervalId);
       window.removeEventListener("focus", refreshAnnouncements);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [loadAnnouncements]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadSectionOrder = async () => {
+      try {
+        const order = await getDisplayOrder();
+        if (isMounted && order.sections) setSectionOrder(order.sections);
+      } catch (err) {
+        console.error("Failed to load display order:", err);
+      }
+    };
+
+    loadSectionOrder();
+    return () => {
+      isMounted = false;
     };
   }, []);
 

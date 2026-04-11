@@ -55,7 +55,7 @@ const groupAndFilterAnnouncements = (announcements) => {
     }
   });
   
-  const desiredLocalOrder = ["Afternoon Program","Keep Fit","Bible Studies","Midweek","Upcoming Programmes","Meetings","Funeral","Thanksgiving","","Transfers"];
+  const desiredLocalOrder = ["Afternoon Program","Keep Fit","Bible Studies","Midweek","Upcoming Programmes","Meetings","Funeral","Thanksgiving"," ", "Transfers"];
   
   const localGrouped = {};
 
@@ -121,6 +121,66 @@ const Section = ({ title, items }) => {
           </li>
         ))}
       </ul>
+    </div>
+  );
+};
+
+const TransferSection = ({ transfers }) => {
+  if (!transfers) return null;
+
+  const groups = [
+    { title: "First Reading In", items: transfers.firstReadingIn || [] },
+    { title: "First Reading Out", items: transfers.firstReadingOut || [] },
+    { title: "Second Reading In", items: transfers.secondReadingIn || [] },
+    { title: "Second Reading Out", items: transfers.secondReadingOut || [] },
+  ];
+
+  const hasAnyTransfers = groups.some((group) => group.items.length > 0);
+  if (!hasAnyTransfers) return null;
+
+  return (
+    <div className="bg-gray-50 rounded-xl shadow p-6 mb-10">
+      <div className="flex items-center justify-center mb-6">
+        <div className="flex-1 h-px bg-gray-300 mr-3 flex items-center justify-end">
+          <div className="flex space-x-1 text-gray-400">
+            {[...Array(7)].map((_, i) => (
+              <TiInfinityOutline key={i} />
+            ))}
+          </div>
+        </div>
+
+        <h3 className="text-xl font-bold text-center text-gray-800 mx-4 whitespace-nowrap">
+          Transfers
+        </h3>
+
+        <div className="flex-1 h-px bg-gray-300 ml-3 flex items-center justify-start">
+          <div className="flex space-x-1 text-gray-400">
+            {[...Array(7)].map((_, i) => (
+              <LiaGripLinesSolid key={i} />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-6">
+        {groups.map((group) => (
+          <div key={group.title}>
+            <h4 className="text-base font-semibold text-gray-800 mb-3">{group.title}</h4>
+            {group.items.length > 0 ? (
+              <ul className="space-y-3">
+                {group.items.map((item, index) => (
+                  <li key={index} className="bg-white rounded-md shadow-sm p-4">
+                    <h5 className="font-semibold text-gray-900">{item.title}</h5>
+                    <p className="text-gray-700 mt-1 text-sm whitespace-pre-line">{item.description}</p>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-gray-500">No items</p>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
@@ -210,15 +270,7 @@ useEffect(() => {
                         {sectionName === "Local" ? (
                           <DraggableLocalSection localData={groupedAnnouncements.Local} />
                         ) : sectionName === "Transfers" ? (
-                          <Section
-                            title="Transfers"
-                            items={[
-                              ...groupedAnnouncements.Transfers.firstReadingIn,
-                              ...groupedAnnouncements.Transfers.firstReadingOut,
-                              ...groupedAnnouncements.Transfers.secondReadingIn,
-                              ...groupedAnnouncements.Transfers.secondReadingOut,
-                            ]}
-                          />
+                          <TransferSection transfers={groupedAnnouncements.Transfers} />
                         ) : (
                           <Section
                             title={sectionName}

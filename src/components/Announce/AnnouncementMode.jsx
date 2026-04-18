@@ -243,11 +243,21 @@ export default function AnnouncementMode() {
 
   useEffect(() => {
     let isMounted = true;
+    let pollInterval;
 
-    const fetchAll = async () => {
+    const fetchAll = async (isPoll = false) => {
+      if (!isMounted) return;
+      
       try {
+        if (isPoll) console.log("🔄 Polling for announcement updates...");
+        
         const [all, order] = await Promise.all([getAnn(), getDisplayOrder()]);
         if (!isMounted) return;
+        
+        // Save to localStorage for offline access
+        localStorage.setItem("cachedAnnouncements", JSON.stringify(all));
+        localStorage.setItem("cachedDisplayOrder", JSON.stringify(order));
+        
         setGroupedAnnouncements(groupAndFilterAnnouncements(all));
         if (order.localCategories) {
           setLocalCategories(order.localCategories);
@@ -257,17 +267,70 @@ export default function AnnouncementMode() {
           setSectionOrder(order.sections);
           localStorage.setItem("sectionOrder", JSON.stringify(order.sections));
         }
-        if (order.itemOrders) setItemOrders(order.itemOrders);  
+        if (order.itemOrders) setItemOrders(order.itemOrders);
+        
+        if (isPoll) console.log("✅ Announcements updated from poll");
       } catch (err) {
-        console.error("Failed to load:", err);
-        if (isMounted) setGroupedAnnouncements(EMPTY_GROUPED_ANNOUNCEMENTS);
+        console.error("Failed to load announcements:", err);
+        
+        // Try to load from cache when error occurs
+        try {
+          const cached = localStorage.getItem("cachedAnnouncements");
+          if (cached && !navigator.onLine) {
+            const all = JSON.parse(cached);
+            setGroupedAnnouncements(groupAndFilterAnnouncements(all));
+            console.log("📦 Loaded from cache (offline mode)");
+          }
+        } catch (cacheErr) {
+          console.error("Failed to load cached announcements:", cacheErr);
+        }
       } finally {
         if (isMounted) setLoading(false);
       }
     };
 
+    // Initial fetch
+    console.log("📥 Initial announcement load");
     fetchAll();
-    return () => { isMounted = false; };
+
+    // Setup polling - fetch every 30 seconds
+    const startPolling = () => {
+      if (pollInterval) clearInterval(pollInterval);
+      
+      console.log("⏱️ Starting auto-refresh polling (every 30 seconds)");
+      pollInterval = setInterval(() => {
+        if (navigator.onLine) {
+          fetchAll(true);
+        } else {
+          console.log("⏸️ Skipping poll - offline");
+        }
+      }, 1000);
+    };
+
+    // Start polling immediately
+    startPolling();
+
+    // Listen for online/offline events
+    const handleOnline = () => {
+      console.log("🌐 Back online - resuming polls");
+      fetchAll();
+      startPolling();
+    };
+
+    const handleOffline = () => {
+      console.log("❌ Offline - pausing polls");
+      if (pollInterval) clearInterval(pollInterval);
+    };
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      isMounted = false;
+      if (pollInterval) clearInterval(pollInterval);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
   }, []);
 
   const reorder = (list, startIndex, endIndex) => {

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getAnn } from "../../api/announcements/getAnn";
 import { getDisplayOrder, saveDisplayOrder } from "../../api/displayOrder";
 import { useNavigate } from "react-router-dom";
@@ -234,11 +234,6 @@ export default function AnnouncementMode() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const loadAnnouncements = useCallback(async () => {
-    const all = await getAnn();
-    setGroupedAnnouncements(groupAndFilterAnnouncements(all));
-  }, []);
-
   const [itemOrders, setItemOrders] = useState({});
 
   useEffect(() => {
@@ -247,18 +242,32 @@ export default function AnnouncementMode() {
 
     const fetchAll = async (isPoll = false) => {
       if (!isMounted) return;
-      
       try {
-        if (isPoll) console.log("🔄 Polling for announcement updates...");
-        
         const [all, order] = await Promise.all([getAnn(), getDisplayOrder()]);
         if (!isMounted) return;
-        
-        // Save to localStorage for offline access
+
         localStorage.setItem("cachedAnnouncements", JSON.stringify(all));
         localStorage.setItem("cachedDisplayOrder", JSON.stringify(order));
-        
-        setGroupedAnnouncements(groupAndFilterAnnouncements(all));
+
+        const grouped = groupAndFilterAnnouncements(all);
+
+        // Apply saved item orders to Conference and District
+        const currentItemOrders = order.itemOrders || {};
+        ["Conference", "District"].forEach((section) => {
+          const savedIds = currentItemOrders[section];
+          if (savedIds && grouped[section]) {
+            const ordered = savedIds
+              .map((id) => grouped[section].find((item) => item._id === id))
+              .filter(Boolean);
+            const remaining = grouped[section].filter(
+              (item) => !savedIds.includes(item._id)
+            );
+            grouped[section] = [...ordered, ...remaining];
+          }
+        });
+
+        setGroupedAnnouncements(grouped);
+
         if (order.localCategories) {
           setLocalCategories(order.localCategories);
           localStorage.setItem("localCategoryOrder", JSON.stringify(order.localCategories));
@@ -268,18 +277,14 @@ export default function AnnouncementMode() {
           localStorage.setItem("sectionOrder", JSON.stringify(order.sections));
         }
         if (order.itemOrders) setItemOrders(order.itemOrders);
-        
-        if (isPoll) console.log("✅ Announcements updated from poll");
+
       } catch (err) {
         console.error("Failed to load announcements:", err);
-        
-        // Try to load from cache when error occurs
         try {
           const cached = localStorage.getItem("cachedAnnouncements");
           if (cached && !navigator.onLine) {
             const all = JSON.parse(cached);
             setGroupedAnnouncements(groupAndFilterAnnouncements(all));
-            console.log("📦 Loaded from cache (offline mode)");
           }
         } catch (cacheErr) {
           console.error("Failed to load cached announcements:", cacheErr);
@@ -288,7 +293,6 @@ export default function AnnouncementMode() {
         if (isMounted) setLoading(false);
       }
     };
-
     // Initial fetch
     console.log("📥 Initial announcement load");
     fetchAll();
@@ -304,7 +308,7 @@ export default function AnnouncementMode() {
         } else {
           console.log("⏸️ Skipping poll - offline");
         }
-      }, 1000);
+      }, 5000);
     };
 
     // Start polling immediately

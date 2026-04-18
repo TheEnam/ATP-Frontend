@@ -1,3 +1,4 @@
+import React from "react";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 import { TiInfinityOutline } from "react-icons/ti";
 import { LiaGripLinesSolid } from "react-icons/lia";
